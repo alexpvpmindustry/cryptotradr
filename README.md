@@ -1,0 +1,2 @@
+# CryptoTrader
+speaks for itself
