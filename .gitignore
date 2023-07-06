@@ -12,6 +12,7 @@ kline_data2/
 kline_data/
 
 *.config 
+*figures*
 
 # Distribution / packaging
 .Python
