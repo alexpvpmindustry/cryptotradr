@@ -11,6 +11,8 @@ __pycache__/
 kline_data2/
 kline_data/
 
+*.config 
+
 # Distribution / packaging
 .Python
 build/
