@@ -130,7 +130,7 @@ def get_signal():
         requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}")
-
+print("starting")
 intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
 delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
 time.sleep(delay)
