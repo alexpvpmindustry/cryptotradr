@@ -57,7 +57,7 @@ entered=False
 
 def get_signal():
     global new_entry, entered,thres_diff,percentile,interval,tickerpair
-    klines = get_klines(tickerpair,interval,limit=300)
+    klines = get_klines(tickerpair,interval,limit=150)
     dfmpl = klines_to_dfmpl(klines).iloc[:-1]
     #fulllen=len(dfmpl)
     #print(fulllen)
