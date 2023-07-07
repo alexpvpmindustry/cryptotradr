@@ -17,7 +17,7 @@ from itertools import zip_longest
 import datetime
 import schedule
 import json,requests
-config = json.load(open("secrets.config","r")) 
+#config = json.load(open("secrets.config","r")) 
 role="<@&1126499478342475807>"
 
 tickerpair="ETCUSDT" #GBPUSDT #LTCUSDT #ETHUSDT #BTCUSDT
