@@ -14,7 +14,7 @@ install ta lib with `conda install -c conda-forge ta-lib`
 pip install requests,schedule,pandas,mplfinance
 
 ## todos
-
+ 
 - find tickerpairs present on trading platform.
 - optimise parameters for tickerpairs.
 - run multiple signals at the same time.
