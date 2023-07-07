@@ -23,7 +23,8 @@ python testimports.py
 
 
 ## todos
- 
+
+- a script to start/restart all runs
 - find tickerpairs present on trading platform.
 - optimise parameters for tickerpairs.
 - run multiple signals at the same time.
