@@ -113,20 +113,20 @@ def get_signal():
         #print(dfmpl.iloc[exits[-1]])
         #print("exit trade now")
         entered=False
-        requests.post(config["crypto-signals2"],data={"content":f"exit {tickerpair} {interval} {dfmpl.iloc[-1].Close} {dfmpl.iloc[-1].name}"})
+        requests.post(config["crypto-signals2"],data={"content":f"exit `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}` `{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {role}"})
     elif new_entry and not entered:
         entry_time_utc_ms = entry_df.name.value//1_000_000
         xx = entry_df.Close
-        strr = tickerpair+" "+ ("BUY  " if buy==1 else "SELL ")+f"{xx}" 
-        strr += f" tp {xx*(1+0.01*buy):.4f} sl {xx*(1-0.005*buy):.4f}\n"
-        strr += f"{entry_df.name} {role} at {str(datetime.datetime.now())}"
+        strr = f"`{tickerpair}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
+        strr += f" tp `{xx*(1+0.01*buy):.4f}` sl `{xx*(1-0.005*buy):.4f}`\n"
+        strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())}`) {role}"
         #print(strr)
         requests.post(config["crypto-signals2"],data={"content":strr})
         #print(entry_df)
         entered=True
         #print("*"*8,"new entry",entry_time_utc_ms) #klinetime= entry_time_utc_ms-3*3600*1_000
     else:
-        strr = f"fetched {tickerpair} {interval} at {dfmpl.iloc[-1].name} at {str(datetime.datetime.now())}"
+        strr = f"fetched `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`)"
         requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}")
