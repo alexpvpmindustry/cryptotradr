@@ -28,3 +28,4 @@ python testimports.py
 - find tickerpairs present on trading platform.
 - optimise parameters for tickerpairs.
 - run multiple signals at the same time.
+- try binance apis for trading
