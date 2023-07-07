@@ -113,7 +113,7 @@ def get_signal():
         #print(dfmpl.iloc[exits[-1]])
         #print("exit trade now")
         entered=False
-        requests.post(config["crypto-signals2"],data={"content":f"exit {tickerpair} {interval} {dfmpl.iloc[-1].Close}"})
+        requests.post(config["crypto-signals2"],data={"content":f"exit {tickerpair} {interval} {dfmpl.iloc[-1].Close} {dfmpl.iloc[-1].name}"})
     elif new_entry and not entered:
         entry_time_utc_ms = entry_df.name.value//1_000_000
         xx = entry_df.Close
