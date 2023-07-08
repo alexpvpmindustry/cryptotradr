@@ -5,10 +5,11 @@ from pathlib import Path
 from os.path import exists
 import time
 import pandas as pd
+from glob import glob
 
 base_url = 'https://api.binance.com' 
 
-def get_klines(symbol, interval='1h', start_time=None, end_time=None, limit=500):
+def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit=500):
     endpoint = '/api/v3/klines'
     url = base_url + endpoint
     params = {'symbol': symbol,'interval': interval,'limit': limit}
@@ -40,9 +41,13 @@ def get_klines(symbol, interval='1h', start_time=None, end_time=None, limit=500)
     else:
         print(f'Error: {response.status_code}',end="")
         return None
-def klines_to_dfmpl(klines):
-    dfmpl = pd.DataFrame(klines)[["open_time","open","high","low","close","volume"]]
+def df_to_dfmpl(df): 
+    dfmpl = df[["open_time","open","high","low","close","volume"]]
     dfmpl = dfmpl.rename(columns={"open_time":"Date","open":"Open","high":"High","low":"Low","close":"Close","volume":"Volume"})
     dfmpl=dfmpl.set_index("Date")
     dfmpl.index = pd.to_datetime(dfmpl.index+3600*3*1e3,unit="ms")
     return dfmpl
+def get_historical_df(tickerpair,interval,folder="kline_data_sample"):
+    df = [pd.read_csv(g) for g in sorted(glob(f"{folder}\\{tickerpair}/*")) if f"_{interval}.csv" in g]
+    df = pd.concat(df, ignore_index=True).drop_duplicates().reset_index(drop=True)
+    return df
