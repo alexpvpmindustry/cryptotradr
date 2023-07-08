@@ -17,7 +17,7 @@ pip install requests schedule pandas mplfinance numpy
 
 conda create -n cryt310 python=3.10
 conda activate cryt310
-pip install -q numpy requests schedule pandas mplfinance
+pip install -q numpy requests schedule pandas mplfinance notebook
 conda install -y -c conda-forge ta-lib
 python testimports.py
 
