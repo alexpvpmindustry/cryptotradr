@@ -10,6 +10,11 @@ role="<@&1126499478342475807>"
 
 
 # for data analysis
+def intpl(x,x1=0,x2=100,y1=0,y2=255):
+    x=max(x1,x)
+    x=min(x,x2)
+    val = (x-x1)/(x2-x1)
+    return int(val*(y2-y1)+y1)
 def mapped(i):
     if i[:2]=="00":
         return -1
@@ -55,7 +60,7 @@ def get_entrys_exits(dfmpl,percentile,thres_diff):
 
     entrys = np.where(~np.isnan(scatterup))[0]
     exits = np.where(~np.isnan(scatterdn))[0]
-    return entrys,exits,dfmpl,scatterup,scatterdn,r_high_sm,r_low_sm,r_sm,r_sm_diff,thres_diff
+    return entrys,exits,scatterup,scatterdn,r_high_sm,r_low_sm,r_sm,r_sm_diff,thres_diff
 def get_entry_signals(entrys,dfmpl):    #get all entry signal
     entry_signals = []
     for entry in entrys:
@@ -127,7 +132,7 @@ def get_predictions(entrys,exits,dfmpl): # need to rename this
     predicted_result = np.asarray([ mapped(i) for i in input_labels])
     return predict,result,predict_seq,predicted_result
 
-def get_profit_highlows_of_predictions(entrys,exits,predicted_result,dfmpl):
+def get_profit_highlows_of_predictions(entrys,exits,predicted_result,dfmpl,buyonly=False):
     entry_exit_pairs=(entrys,exits)
     profit=[] # implement backtesting for this strat
     trade_durations = []
@@ -140,6 +145,9 @@ def get_profit_highlows_of_predictions(entrys,exits,predicted_result,dfmpl):
         s1 = dfmpl.iloc[entry]
         s2 = dfmpl.iloc[exit]
         if buy==0:continue #if buy==-1:continue
+        if buyonly:
+            if buy==-1:
+                continue
         gains= buy*(s2.Close-s1.Close)/(s1.Close)
         profit.append(gains)
         # collecting trade stats
@@ -154,17 +162,16 @@ def get_profit_highlows_of_predictions(entrys,exits,predicted_result,dfmpl):
                                dfmpl.iloc[entry:exit+1].Low.min()) ) 
     return profit,trade_durations,concated_df0,concated_df0_signal,high_low_pair
 
-def get_stats(dfmpl,scatterup,profit,trade_dur,lastNsamples=0): 
-    
-    profit1=profit[-lastNsamples:]
+def get_stats(dfmpl,scatterup,profit,trade_dur,lastNsamples=0,fee=0): 
+    "fee is in fraction"
     ind=dfmpl.iloc[np.where(~np.isnan(scatterup))[0][np.r_[-lastNsamples,-1]]].index
-    equity=[1]
-    
-    final_profit = 1
-    for p in profit1:
-        final_profit *= (1+p)
-        equity.append(final_profit)
-    
+    profit1=profit[-lastNsamples:]
+#     equity=[1]
+#     final_profit = 1
+#     for p in profit1:
+#         final_profit *= (1+p)
+#         equity.append(final_profit)
+    final_profit,equity = get_all_equity(profit,lastNsamples,fee=fee)
     wins=sum(p>0 for p in profit1)
     diff = ind[1].to_datetime64()-ind[0].to_datetime64()
     trading_days = max(int(diff)*1e-9/3600/24,1)
@@ -177,19 +184,23 @@ def get_stats(dfmpl,scatterup,profit,trade_dur,lastNsamples=0):
           f"days={trading_days:.3g}d, trdDur={np.mean(trade_dur[-lastNsamples:]):.3g}hr,"+\
     f" trd/d={len(profit1)/trading_days:.3g}"+"\n"+\
     f"g%/day={gains_per_day:.2f}%/d, g%/trade={gains_per_trade:.2f}%/trd"
-    return str1,gains_,trading_days
-def get_all_equity(profit):
+    return str1,gains_,trading_days,gains_per_day,gains_per_trade,np.mean(profit1)*100
+def get_all_equity(profit,lastNsamples=0,fee=0):
+    "fee is in fraction"
     final_profit = 1
-    profit1=profit
+    profit1=profit[-lastNsamples:]
     equity=[1]
     for p in profit1:
-        final_profit *= (1+p)
+        final_profit *= (1+p-fee)
         equity.append(final_profit)
     return final_profit,equity
 
-def get_hl_data(hl_pair):
+def get_hl_data(hl_pair,buyonly=False):
+    buy_types =[1,-1]
+    if buyonly:
+        buy_types =[1,1]
     hl_data=[]
-    for buy_ in [1,-1]:
+    for buy_ in buy_types:
         highs=[(high-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
         lows=[(low-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
         profit_=[buy*(exi-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]  
@@ -203,7 +214,10 @@ def get_hl_data(hl_pair):
 # for plotting
 
 
-def plot_hl_ax(ax,hl_pair,hl_data,bres=0.1): #bres=0.1 # bin resolution, 0.1%    
+def plot_hl_ax(ax,hl_pair,hl_data,bres=0.1,buyonly=False): #bres=0.1 # bin resolution, 0.1%
+    buy_types =[1,-1]
+    if buyonly:
+        buy_types =[1,1]
     vals=[]
     for buy_ in [1,-1]:
         highs=[(high-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
@@ -220,7 +234,8 @@ def plot_hl_ax(ax,hl_pair,hl_data,bres=0.1): #bres=0.1 # bin resolution, 0.1%
         profit_=[buy*(exi-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
         for i,stats in enumerate([highs,lows,profit_]):
             hist ,_ = np.histogram(stats,bins=bins)
-            hist=hist/max(hist)
+            if max(hist)!=0:
+                hist=hist/max(hist)
             ax.bar(bins[1:]*0.5+bins[:-1]*0.5,hist,bottom=5-(offset+i),width=bres)
             ax.axhline(offset+i,ls="--",alpha=0.4)
     for buy_,hlp,offset in zip([1,-1],hl_data,[0,3]):

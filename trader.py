@@ -6,9 +6,14 @@ from os.path import exists
 import time
 import pandas as pd
 from glob import glob
+from binance.client import Client
+import json
+config = json.load(open("secrets.config","r"))
+bin_api_key=config["bin_api_key"]
+bin_api_secr=config["bin_api_secr"]
 
 base_url = 'https://api.binance.com' 
-
+# getting data
 def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit=500):
     endpoint = '/api/v3/klines'
     url = base_url + endpoint
@@ -51,3 +56,4 @@ def get_historical_df(tickerpair,interval,folder="kline_data_sample"):
     df = [pd.read_csv(g) for g in sorted(glob(f"{folder}\\{tickerpair}/*")) if f"_{interval}.csv" in g]
     df = pd.concat(df, ignore_index=True).drop_duplicates().reset_index(drop=True)
     return df
+# doing actual trades
