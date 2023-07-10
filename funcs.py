@@ -61,7 +61,7 @@ def get_entrys_exits(dfmpl,percentile,thres_diff):
     entrys = np.where(~np.isnan(scatterup))[0]
     exits = np.where(~np.isnan(scatterdn))[0]
     return entrys,exits,scatterup,scatterdn,r_high_sm,r_low_sm,r_sm,r_sm_diff,thres_diff
-def get_entry_signals(entrys,dfmpl):    #get all entry signal
+def get_entry_signals(entrys,dfmpl,onlybuy=False):    #get all entry signal
     entry_signals = []
     for entry in entrys:
         if (entry-2)<0:
@@ -73,8 +73,12 @@ def get_entry_signals(entrys,dfmpl):    #get all entry signal
         values_ = [s.Close-s.Open,s1.Close-s1.Open,]
         presignal = "".join([ "1"if x>0 else "0" for x in values_])
         buy=mapped(presignal)
-        if buy!=0:
-            entry_signals.append( (entry,buy,dfmpl.iloc[entry].name) )
+        if not onlybuy:
+            if buy!=0:
+                entry_signals.append( (entry,buy,dfmpl.iloc[entry].name) )
+        else:
+            if buy==1:
+                entry_signals.append( (entry,buy,dfmpl.iloc[entry].name) )
     return entry_signals
 def parse_signals_and_send_msg(entrys,exits,dfmpl,entry_signals,tickerpair,interval):
 

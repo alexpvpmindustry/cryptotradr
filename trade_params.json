@@ -1,0 +1,30 @@
+{"ver1":
+ {"notes":"buy only, using strat_tpsl1, data from 5_8figures_percentile_ticker_buynfee",
+  "params":
+  [
+      
+      
+      
+      
+      
+ {"tickerpair":"ARBUSDT","interval":"30m","sl":-0.0656,"tp":0.0797,"percentile":99,"thres_diff":0.0064588},
+ {"tickerpair":"ARBUSDT","interval":"5m","sl":-0.0225,"tp":0.0261,"percentile":99,"thres_diff":0.0023910},
+ {"tickerpair":"ARBUSDT","interval":"15m","sl":-0.0584,"tp":0.0819,"percentile":99,"thres_diff":0.0041245},
+ {"tickerpair":"AVAXUSDT","interval":"15m","sl":-0.0495,"tp":0.0431,"percentile":99,"thres_diff":0.0034536},
+ {"tickerpair":"XRPUSDT","interval":"5m","sl":-0.0165,"tp":0.0245,"percentile":99,"thres_diff":0.0013421},
+ {"tickerpair":"BTCUSDT","interval":"5m","sl":-0.0150,"tp":0.0205,"percentile":99,"thres_diff":0.0010251},
+ {"tickerpair":"MATICUSDT","interval":"5m","sl":-0.0245,"tp":0.0247,"percentile":99,"thres_diff":0.0015761},
+ {"tickerpair":"AVAXUSDT","interval":"5m","sl":-0.0314,"tp":0.0238,"percentile":99,"thres_diff":0.0015527},
+ {"tickerpair":"LTCUSDT","interval":"15m","sl":-0.0494,"tp":0.0363,"percentile":99,"thres_diff":0.0029289},
+ {"tickerpair":"BCHUSDT","interval":"5m","sl":-0.0299,"tp":0.0250,"percentile":99,"thres_diff":0.0012432},
+ {"tickerpair":"SHIBUSDT","interval":"5m","sl":-0.0250,"tp":0.0282,"percentile":99,"thres_diff":0.0017263},
+ {"tickerpair":"ETHUSDT","interval":"5m","sl":-0.0250,"tp":0.0238,"percentile":99,"thres_diff":0.0013099},
+ {"tickerpair":"ETCUSDT","interval":"5m","sl":-0.0428,"tp":0.0255,"percentile":99,"thres_diff":0.0016644},
+ {"tickerpair":"LTCUSDT","interval":"5m","sl":-0.0201,"tp":0.0279,"percentile":99,"thres_diff":0.0014997},
+ {"tickerpair":"WAVESUSDT","interval":"5m","sl":-0.0501,"tp":0.0484,"percentile":99,"thres_diff":0.0020764},
+ {"tickerpair":"BTCUSDT","interval":"15m","sl":-0.0460,"tp":0.0288,"percentile":99,"thres_diff":0.0021175},
+ {"tickerpair":"SHIBUSDT","interval":"15m","sl":-0.0740,"tp":0.0917,"percentile":99,"thres_diff":0.0043225},
+ {"tickerpair":"ETCUSDT","interval":"15m","sl":-0.0664,"tp":0.0438,"percentile":99,"thres_diff":0.0035786}
+  ]
+ }
+}
