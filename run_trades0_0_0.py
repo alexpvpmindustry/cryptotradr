@@ -84,7 +84,7 @@ def get_signal():
         strr = f"exit `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {role}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
-        ping("CRYPTO_SIGNALS2",strr)#requests.post(config["crypto-signals2"],data={"content":strr})
+        ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
     elif new_entry and not entered:
         entry_time_utc_ms = entry_df.name.value//1_000_000
         xx = entry_df.Close
@@ -96,12 +96,12 @@ def get_signal():
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
         cmd = ["python","master_trades.py",param_choice,"15",f"{enterdftime}","TEST"]
         subprocess.Popen( cmd , shell=True)
-        ping("CRYPTO_SIGNALS2",strr)#requests.post(config["crypto-signals2"],data={"content":strr})
+        ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
         entered=True
     else:
         strr = f"fetched `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
         strr+= f"(`{str(datetime.datetime.now())}`)"
-        ping("STATUS_PING2",strr)#requests.post(config["status-ping2"],data={"content":strr})
+        ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}")
 print("starting")
