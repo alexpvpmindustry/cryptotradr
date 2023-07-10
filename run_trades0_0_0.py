@@ -17,8 +17,8 @@ if len(sys.argv)>1:
 trade_params = json.load(open("trade_params.json","r"))
 trade_param = trade_params["ver1"]["params"][param_choice]
 thres_diff = float(trade_param["thres_diff"])
-tickerpair = float(trade_param["tickerpair"])
-interval = float(trade_param["interval"])
+tickerpair = trade_param["tickerpair"]
+interval = trade_param["interval"]
 sl = float(trade_param["sl"])
 tp = float(trade_param["tp"])
 percentile = float(trade_param["percentile"])
@@ -77,13 +77,13 @@ def get_signal():
         assert buy==1
     if new_entry and entered:
         #print("hold")
-        write_signal(tickerpair,interval,signal="HOLD",closeprice=dfmpl.iloc[-1].Close,dfmpl.iloc[-1].name) 
+        write_signal(tickerpair,interval,signal="HOLD",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
     elif not new_entry and entered:
         #print("exit trade now")
         entered=False
         strr = f"exit `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {role}"
-        write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfmpl.iloc[-1].name) 
+        write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
         ping("CRYPTO_SIGNALS2",strr)#requests.post(config["crypto-signals2"],data={"content":strr})
     elif new_entry and not entered:
         entry_time_utc_ms = entry_df.name.value//1_000_000
@@ -91,7 +91,7 @@ def get_signal():
         strr = f"`{tickerpair}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
         strr += f" tp `{xx*(1+0.01*buy):.4f}` sl `{xx*(1-0.005*buy):.4f}`\n"
         strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())}`) {role}"
-        write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfmpl.iloc[-1].name)
+        write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
         cmd = ["python","master_trades.py",param_choice,"15",f"{enterdftime}","TEST"]

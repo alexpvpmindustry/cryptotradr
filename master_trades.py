@@ -12,8 +12,8 @@ if len(sys.argv)>1:
 trade_params = json.load(open("trade_params.json","r"))
 trade_param = trade_params["ver1"]["params"][param_choice]
 thres_diff = float(trade_param["thres_diff"])
-tickerpair = float(trade_param["tickerpair"])
-interval = float(trade_param["interval"])
+tickerpair = trade_param["tickerpair"]
+interval = trade_param["interval"]
 sl = float(trade_param["sl"])
 tp = float(trade_param["tp"])
 percentile = float(trade_param["percentile"])
