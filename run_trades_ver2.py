@@ -28,7 +28,7 @@ hl_pairs = None
 entered=False
 new_entry=False
 
-def get_signal():
+def get_signal(firstRun=False):
     global new_entry, entered,thres_diff,percentile,interval,tickerpair 
     dfmpl = get_data(tickerpair,interval,limit=100,type="live")
     entrys,exits,_,_,_,_,_,_,thres_diff = get_entrys_exits(dfmpl,percentile,thres_diff)
@@ -63,7 +63,7 @@ def get_signal():
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
-        cmd = ["python","master_trades_ver2.py",f"{param_choice}","15",f"{enterdftime}","TEST"]
+        cmd = ["python","master_trades_ver2.py",f"{param_choice}","15",f"{enterdftime}","TEST",f"{xx:.6f}"]
         cmd = " ".join(cmd)
         subprocess.Popen( cmd , shell=True)
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
@@ -74,18 +74,25 @@ def get_signal():
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
-def get_signal_with_warnings():
+def get_signal_with_warnings(firstRun=False):
     try:
         time.sleep( 0.15*param_choice ) # delay subsequent calls by 0.15sec
-        get_signal()
+        get_signal(firstRun)
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
         raise
 print("starting")
-intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
-delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
-time.sleep(delay)
-schedule.every(intvl).minutes.at(":02").do(get_signal_with_warnings) # run this at 22:30:04 
+ddtn=datetime.datetime.now()
+if "m" in interval:
+    intvl = int(interval.split("m")[0]); 
+    delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
+    time.sleep(delay)
+    schedule.every(intvl).minutes.at(":02").do(get_signal_with_warnings) # run this at 22:30:04
+else:
+    intvl = int(interval.split("h")[0])
+    get_signal_with_warnings(True)
+    delay = 1 # TODO
+    schedule.every(intvl).hours.at(":00:02").do(get_signal_with_warnings)
 while True:
     schedule.run_pending()
     time.sleep(1)

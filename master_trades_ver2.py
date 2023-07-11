@@ -22,9 +22,12 @@ hl_pairs = None
 symbol = tickerpair
 qtyUSD = float(sys.argv[2])
 dfname = sys.argv[3]
-test=(sys.argv[4]=="TEST")
-
+test   = (sys.argv[4]=="TEST")
+closeprice=float(sys.argv[5])
 cur_price = get_current_price(symbol,sell=False)
+if (cur_price-closeprice)/closeprice>0.005:
+    # todo
+    pass
 qty = qtyUSD/cur_price
 a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
 
