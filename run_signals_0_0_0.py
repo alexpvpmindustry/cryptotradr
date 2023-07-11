@@ -1,19 +1,9 @@
 import numpy as np
-import pandas as pd
-import mplfinance as mpf
-import os
 import sys
-from glob import glob
-#import matplotlib.pyplot as plt
 from trader import get_klines
 from trader import klines_to_dfmpl
-#%matplotlib inline
-from collections import Counter
-import talib as ta # conda activate cryt310
-from matplotlib.ticker import AutoMinorLocator
 import time
 from itertools import zip_longest
-#from IPython.display import Javascript
 import datetime
 import schedule
 import json,requests

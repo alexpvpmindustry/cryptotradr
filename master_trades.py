@@ -1,6 +1,5 @@
-import time
-from trader import get_current_price,price_action_signal,strat_tpsl1
-import sys
+import datetime,time,sys
+from trader import get_current_price,price_action_signal, read_signal
 import json
 from disc_api import ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2
 from trader import market_trade, write_signal 
