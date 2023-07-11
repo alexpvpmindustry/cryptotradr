@@ -49,7 +49,7 @@ while status=="HOLD":
     # get price_action_signal
     pas_status,strat_data,strr = price_action_signal(enter_data,strat_data,cur_price)
     if strr[:2]=="Up": # shifting of SLTP
-        ping(CRYPTO_SIGNALS2,pas_status+f" pc{param_choice} {cur_price:.4f}"+strr)
+        ping(CRYPTO_SIGNALS2,pas_status+f" pc{param_choice} `{cur_price:.4f}`"+strr)
     if loopcounts%10==0:# read exit status
         #TODO read exit status
         stdmean_status=read_signal(symbol,interval)
