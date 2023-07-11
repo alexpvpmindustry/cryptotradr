@@ -190,7 +190,7 @@ def get_stats(dfmpl,scatterup,profit,trade_dur,lastNsamples=0,fee=0):
           f"days={trading_days:.3g}d, trdDur={np.mean(trade_dur[-lastNsamples:]):.3g}hr,"+\
     f" trd/d={len(profit1)/trading_days:.3g}"+"\n"+\
     f"g%/day={gains_per_day:.2f}%/d, g%/trade={gains_per_trade:.2f}%/trd"
-    return str1,gains_,trading_days,gains_per_day,gains_per_trade,np.mean(profit1)*100
+    return str1,gains_,trading_days,gains_per_day,gains_per_trade,np.mean(profit1)*100,wins/len(profit1)*100
 def get_all_equity(profit,lastNsamples=0,fee=0):
     "fee is in fraction"
     final_profit = 1
