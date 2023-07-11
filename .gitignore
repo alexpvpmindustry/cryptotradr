@@ -12,6 +12,9 @@ kline_data2/
 kline_data/
 trade_signals/*
 
+# plotting data
+5_9_2_data/
+
 *.config 
 *figures*
 
