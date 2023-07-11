@@ -63,7 +63,7 @@ def get_signal():
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
-        cmd = ["python","master_trades_ver2.py",param_choice,"15",f"{enterdftime}","TEST"]
+        cmd = ["python","master_trades_ver2.py",f"{param_choice}","15",f"{enterdftime}","TEST"]
         subprocess.Popen( cmd , shell=True)
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
         entered=True
