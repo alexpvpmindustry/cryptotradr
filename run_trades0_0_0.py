@@ -58,7 +58,7 @@ def get_signal():
     elif new_entry and not entered:
         xx = entry_df.Close
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
-        strr += f" tp `{xx*(1+0.01*buy):.4f}` sl `{xx*(1-0.005*buy):.4f}`\n"
+        strr += f" tp `{xx*(1+tp):.4f}` sl `{xx*(1+sl):.4f}`\n"
         strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
