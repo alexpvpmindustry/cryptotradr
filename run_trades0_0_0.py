@@ -8,7 +8,7 @@ import json,datetime,schedule
 
 from trader import write_signal 
 from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal
-from disc_api import ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2
+from disc_api import ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
 
 ## input arguments
 param_choice = 0 
@@ -73,6 +73,11 @@ def get_signal():
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}")
+def get_signal_with_warnings():
+    try:
+        get_signal()
+    except Exception as e:
+        ping(ERROR_PING2,f"error pc{param_choice} "+str(e))
 print("starting")
 intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
 delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
