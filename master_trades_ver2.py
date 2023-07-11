@@ -29,7 +29,7 @@ qty = qtyUSD/cur_price
 a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
 
 if a1=="FILLED":# we have entered the trade
-    ping(CRYPTO_SIGNALS2,f"We have entered the trade pc{param_choice}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)")
+    ping(CRYPTO_SIGNALS2,f"Entered {symbol}{interval} pc{param_choice}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)")
 else:
     ping(CRYPTO_SIGNALS2,f"ENTER ERROR pc{param_choice} {SIGNALROLE}")
     assert False
@@ -49,7 +49,7 @@ while status=="HOLD":
     # get price_action_signal
     pas_status,strat_data,strr = price_action_signal(enter_data,strat_data,cur_price)
     if strr[:2]=="Up": # shifting of SLTP
-        ping(CRYPTO_SIGNALS2,pas_status+f" pc{param_choice} `{cur_price:.4f}`"+strr)
+        ping(CRYPTO_SIGNALS2,pas_status+f" pc{param_choice} `{cur_price:.4f}` "+strr)
     if loopcounts%10==0:# read exit status
         #TODO read exit status
         stdmean_status=read_signal(symbol,interval)
@@ -64,10 +64,10 @@ while status=="HOLD":
 a1,a2,a3 = market_trade(symbol,qty,buy=False,test=test)
 if a1=="FILLED":# we have exited the trade
     change = (cur_price-enter_data['price'])/enter_data['price']
-    strr = f"We have exited the trade pc{param_choice}, {cur_price:.4f},"
-    strr+= f" entered at {enter_data['price']:.4f},\n"
+    strr = f"Exited {symbol}{interval} pc{param_choice}, `{cur_price:.4f}`,"
+    strr+= f" entered at `{enter_data['price']:.4f}`,\n"
     strr+= f"(`{datetime.datetime.now()}`) "
-    strr+= f"size=${qtyUSD} ({change*100:.2f}%, {qtyUSD*change:.2f}$)"
+    strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)"
     ping(CRYPTO_SIGNALS2,strr)
 else:
     ping(CRYPTO_SIGNALS2,f"EXIT ERROR pc{param_choice} {SIGNALROLE}")
