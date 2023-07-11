@@ -78,6 +78,7 @@ def get_signal_with_warnings():
         get_signal()
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} "+str(e))
+        raise
 print("starting")
 intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
 delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
