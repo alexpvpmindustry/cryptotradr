@@ -64,6 +64,7 @@ def get_signal():
         # execute trading algo
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
         cmd = ["python","master_trades_ver2.py",f"{param_choice}","15",f"{enterdftime}","TEST"]
+        cmd = " ".join(cmd)
         subprocess.Popen( cmd , shell=True)
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
         entered=True
