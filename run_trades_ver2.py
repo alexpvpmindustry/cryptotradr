@@ -38,7 +38,7 @@ def get_signal():
     entry_df= None;buy=None
     for entry,exit in zip_longest(entrys,exits,fillvalue=None):
         if exit is None: # missing exit signal, so its a new enter signal
-            buy_list = [ buy for entry_, buy in entry_signals if entry_==entry]
+            buy_list = [ buy for ( entry_, buy, _ ) in entry_signals if entry_==entry]
             if len(buy_list)==1: 
                 new_entry=True
                 entry_df=dfmpl.iloc[entry]
