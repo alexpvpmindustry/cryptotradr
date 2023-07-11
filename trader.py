@@ -57,10 +57,13 @@ def get_historical_df(tickerpair,interval,folder="kline_data_sample"):
 # doing actual trades
 client = Client(bin_api_key, bin_api_secr)
 
-def get_current_price(symbol):
+def get_current_price(symbol,sell=True):
     data = client.get_order_book(symbol=symbol,limit=1)
     # current_price=float(data["bids"][0][0])*0.5+float(data["asks"][0][0])*0.5
-    current_price=float(data["bids"][0][0]) # price for selling right now
+    if sell:
+        current_price=float(data["bids"][0][0]) # price for selling right now
+    else:
+        current_price=float(data["asks"][0][0]) # price for selling right now
     return current_price
 def market_trade(symbol,quantity,buy=True,test=True):
     if test:

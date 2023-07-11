@@ -35,7 +35,7 @@ def get_signal():
     #get all entry signal
     entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
     new_entry=False
-    entry_df= None;entry_time_utc_ms=None;buy=None
+    entry_df= None;buy=None
     for entry,exit in zip_longest(entrys,exits,fillvalue=None):
         if exit is None: # missing exit signal, so its a new enter signal
             buy_list = [ buy for entry_, buy in entry_signals if entry_==entry]
@@ -51,14 +51,13 @@ def get_signal():
     elif not new_entry and entered:
         #print("exit trade now")
         entered=False
-        strr = f"exit `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
+        strr = f"EXIT pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
     elif new_entry and not entered:
-        entry_time_utc_ms = entry_df.name.value//1_000_000
         xx = entry_df.Close
-        strr = f"`{tickerpair}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
+        strr = f"pc{param_choice} `{tickerpair}` `{interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
         strr += f" tp `{xx*(1+0.01*buy):.4f}` sl `{xx*(1-0.005*buy):.4f}`\n"
         strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
@@ -69,7 +68,7 @@ def get_signal():
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
         entered=True
     else:
-        strr = f"fetched `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
+        strr = f"fetched pc{param_choice} `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
         strr+= f"(`{str(datetime.datetime.now())}`)"
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
