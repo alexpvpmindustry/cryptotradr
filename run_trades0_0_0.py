@@ -83,7 +83,7 @@ print("starting")
 intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
 delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
 time.sleep(delay)
-schedule.every(intvl).minutes.at(":02").do(get_signal) # run this at 22:30:04 
+schedule.every(intvl).minutes.at(":02").do(get_signal_with_warnings) # run this at 22:30:04 
 while True:
     schedule.run_pending()
     time.sleep(1)
