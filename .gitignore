@@ -10,6 +10,7 @@ __pycache__/
 
 kline_data2/
 kline_data/
+trade_signals/*
 
 *.config 
 *figures*
