@@ -52,14 +52,14 @@ def get_signal():
         #print("exit trade now")
         entered=False
         strr = f"EXIT signal pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
-        strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
+        strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
     elif new_entry and not entered:
         xx = entry_df.Close
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
         strr += f" tp `{xx*(1+tp):.4f}` sl `{xx*(1+sl):.4f}`\n"
-        strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
+        strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
         enterdftime = str(dfmpl.iloc[-1].name).replace(" ","_")
@@ -69,8 +69,8 @@ def get_signal():
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
         entered=True
     else:
-        strr = f"fetched pc{param_choice} `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
-        strr+= f"(`{str(datetime.datetime.now())}`)"
+        strr = f"pc{param_choice} `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
+        strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch"
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
