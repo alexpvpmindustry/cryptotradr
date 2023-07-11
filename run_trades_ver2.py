@@ -8,7 +8,7 @@ import json,datetime,schedule,random
 
 from trader import write_signal 
 from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal
-from disc_api import ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
+from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
 
 ## input arguments
 param_choice = 0 
@@ -78,7 +78,7 @@ def get_signal_with_warnings():
         time.sleep(random.uniform(0.5,2))
         get_signal()
     except Exception as e:
-        ping(ERROR_PING2,f"error pc{param_choice} "+str(e))
+        ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
         raise
 print("starting")
 intvl = int(interval.split("m")[0]); ddtn=datetime.datetime.now()
