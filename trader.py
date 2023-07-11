@@ -1,6 +1,6 @@
 
 #import csv
-import time,json,datetime,requests
+import json,datetime,requests
 import pandas as pd
 from glob import glob
 from binance.client import Client 
@@ -117,7 +117,8 @@ def price_action_signal(enter_data,strat_data,cur_price):
     # enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
     #          "hl_pairs":hl_pairs,"strat":"strat_tpsl1"}
     if enter_data["strat"]=="strat_rollingtpsl1":
-        return strat_rollingtpsl1(enter_data,strat_data,cur_price)
+        #return strat_rollingtpsl1(enter_data,strat_data,cur_price)
+        pass
     elif enter_data["strat"]=="strat_tpsl1":
         return strat_tpsl1(enter_data,strat_data,cur_price)
     else:
