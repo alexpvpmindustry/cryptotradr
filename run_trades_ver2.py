@@ -75,7 +75,7 @@ def get_signal():
     print(f"last ran:{ddtn}")
 def get_signal_with_warnings():
     try:
-        time.sleep(random.uniform(0.5,2))
+        time.sleep( 0.15*param_choice ) # delay subsequent calls by 0.15sec
         get_signal()
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
