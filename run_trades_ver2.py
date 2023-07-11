@@ -4,7 +4,7 @@ import sys
 from glob import glob
 import time
 from itertools import zip_longest
-import json,datetime,schedule
+import json,datetime,schedule,random
 
 from trader import write_signal 
 from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal
@@ -75,6 +75,7 @@ def get_signal():
     print(f"last ran:{ddtn}")
 def get_signal_with_warnings():
     try:
+        time.sleep(random.uniform(0.5,2))
         get_signal()
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} "+str(e))
