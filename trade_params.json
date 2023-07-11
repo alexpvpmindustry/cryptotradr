@@ -1,13 +1,7 @@
 {"ver1":
  {"notes":"buy only, using strat_tpsl1, data from 5_8figures_percentile_ticker_buynfee",
   "params":
-  [
-      
-      
-      
-      
-      
- {"tickerpair":"ARBUSDT","interval":"30m","sl":-0.0656,"tp":0.0797,"percentile":99,"thres_diff":0.0064588},
+  [{"tickerpair":"ARBUSDT","interval":"30m","sl":-0.0656,"tp":0.0797,"percentile":99,"thres_diff":0.0064588},
  {"tickerpair":"ARBUSDT","interval":"5m","sl":-0.0225,"tp":0.0261,"percentile":99,"thres_diff":0.0023910},
  {"tickerpair":"ARBUSDT","interval":"15m","sl":-0.0584,"tp":0.0819,"percentile":99,"thres_diff":0.0041245},
  {"tickerpair":"AVAXUSDT","interval":"15m","sl":-0.0495,"tp":0.0431,"percentile":99,"thres_diff":0.0034536},
@@ -26,5 +20,49 @@
  {"tickerpair":"SHIBUSDT","interval":"15m","sl":-0.0740,"tp":0.0917,"percentile":99,"thres_diff":0.0043225},
  {"tickerpair":"ETCUSDT","interval":"15m","sl":-0.0664,"tp":0.0438,"percentile":99,"thres_diff":0.0035786}
   ]
- }
+ },
+ "ver2":{
+    "notes":"5_9_0 perc85 buyonly using strat_tpsl1",
+    "params":[
+        {"id":0,"tickerpair":"BTCUSDT","interval":"5m","sl":-0.0090,"tp":0.0075,"percentile":85,"thres_diff":0.0001259},
+        {"id":1,"tickerpair":"AVAXUSDT","interval":"5m","sl":-0.0164,"tp":0.0107,"percentile":85,"thres_diff":0.0002635},
+        {"id":2,"tickerpair":"XRPUSDT","interval":"5m","sl":-0.0117,"tp":0.0099,"percentile":85,"thres_diff":0.0002198},
+        {"id":3,"tickerpair":"BCHUSDT","interval":"5m","sl":-0.0143,"tp":0.0095,"percentile":85,"thres_diff":0.0001999},
+        {"id":4,"tickerpair":"ETHUSDT","interval":"5m","sl":-0.0139,"tp":0.0096,"percentile":85,"thres_diff":0.0001647},
+        {"id":5,"tickerpair":"LTCUSDT","interval":"5m","sl":-0.0148,"tp":0.0118,"percentile":85,"thres_diff":0.0002495},
+        {"id":6,"tickerpair":"MATICUSDT","interval":"5m","sl":-0.0217,"tp":0.0122,"percentile":85,"thres_diff":0.0002709},
+        {"id":7,"tickerpair":"ETCUSDT","interval":"5m","sl":-0.0198,"tp":0.0116,"percentile":85,"thres_diff":0.0002371},
+        {"id":8,"tickerpair":"BTCUSDT","interval":"15m","sl":-0.0231,"tp":0.0158,"percentile":85,"thres_diff":0.0003425},
+        {"id":9,"tickerpair":"BNBUSDT","interval":"5m","sl":-0.0117,"tp":0.0096,"percentile":85,"thres_diff":0.0001699},
+        {"id":10,"tickerpair":"LTCUSDT","interval":"15m","sl":-0.0282,"tp":0.0183,"percentile":85,"thres_diff":0.0005287},
+        {"id":11,"tickerpair":"XRPUSDT","interval":"15m","sl":-0.0268,"tp":0.0190,"percentile":85,"thres_diff":0.0004698},
+        {"id":12,"tickerpair":"ARBUSDT","interval":"5m","sl":-0.0216,"tp":0.0169,"percentile":85,"thres_diff":0.0004308},
+        {"id":13,"tickerpair":"BNBUSDT","interval":"15m","sl":-0.0283,"tp":0.0160,"percentile":85,"thres_diff":0.0004107},
+        {"id":14,"tickerpair":"WAVESUSDT","interval":"5m","sl":-0.0263,"tp":0.0156,"percentile":85,"thres_diff":0.0003156},
+        {"id":15,"tickerpair":"SOLUSDT","interval":"5m","sl":-0.0216,"tp":0.0194,"percentile":85,"thres_diff":0.0003257},
+        {"id":16,"tickerpair":"SHIBUSDT","interval":"5m","sl":-0.0229,"tp":0.0128,"percentile":85,"thres_diff":0.0002488},
+        {"id":17,"tickerpair":"AVAXUSDT","interval":"15m","sl":-0.0380,"tp":0.0258,"percentile":85,"thres_diff":0.0006921},
+        {"id":18,"tickerpair":"ETHUSDT","interval":"15m","sl":-0.0324,"tp":0.0171,"percentile":85,"thres_diff":0.0004606},
+        {"id":19,"tickerpair":"BCHUSDT","interval":"15m","sl":-0.0339,"tp":0.0205,"percentile":85,"thres_diff":0.0004772},
+        {"id":20,"tickerpair":"BNBUSDT","interval":"30m","sl":-0.0462,"tp":0.0273,"percentile":85,"thres_diff":0.0007446},
+        {"id":21,"tickerpair":"ETHUSDT","interval":"30m","sl":-0.0510,"tp":0.0275,"percentile":85,"thres_diff":0.0007970},
+        {"id":22,"tickerpair":"SOLUSDT","interval":"15m","sl":-0.0395,"tp":0.0278,"percentile":85,"thres_diff":0.0006979},
+        {"id":23,"tickerpair":"LTCUSDT","interval":"30m","sl":-0.0509,"tp":0.0312,"percentile":85,"thres_diff":0.0008685},
+        {"id":24,"tickerpair":"MATICUSDT","interval":"15m","sl":-0.0442,"tp":0.0257,"percentile":85,"thres_diff":0.0006678},
+        {"id":25,"tickerpair":"ETCUSDT","interval":"15m","sl":-0.0379,"tp":0.0263,"percentile":85,"thres_diff":0.0005727},
+        {"id":26,"tickerpair":"BTCUSDT","interval":"30m","sl":-0.0555,"tp":0.0231,"percentile":85,"thres_diff":0.0005955},
+        {"id":27,"tickerpair":"ETCUSDT","interval":"30m","sl":-0.0522,"tp":0.0392,"percentile":85,"thres_diff":0.0008915},
+        {"id":28,"tickerpair":"BCHUSDT","interval":"30m","sl":-0.0599,"tp":0.0316,"percentile":85,"thres_diff":0.0008051},
+        {"id":29,"tickerpair":"WAVESUSDT","interval":"15m","sl":-0.0450,"tp":0.0349,"percentile":85,"thres_diff":0.0006890},
+        {"id":30,"tickerpair":"ARBUSDT","interval":"15m","sl":-0.0423,"tp":0.0332,"percentile":85,"thres_diff":0.0008154},
+        {"id":31,"tickerpair":"ARBUSDT","interval":"30m","sl":-0.0619,"tp":0.0453,"percentile":85,"thres_diff":0.0011237},
+        {"id":32,"tickerpair":"XRPUSDT","interval":"30m","sl":-0.0616,"tp":0.0445,"percentile":85,"thres_diff":0.0007969},
+        {"id":33,"tickerpair":"WAVESUSDT","interval":"30m","sl":-0.0656,"tp":0.0503,"percentile":85,"thres_diff":0.0010882},
+        {"id":34,"tickerpair":"AVAXUSDT","interval":"30m","sl":-0.0737,"tp":0.0465,"percentile":85,"thres_diff":0.0012222},
+        {"id":35,"tickerpair":"SOLUSDT","interval":"30m","sl":-0.0677,"tp":0.0516,"percentile":85,"thres_diff":0.0012835},
+        {"id":36,"tickerpair":"MATICUSDT","interval":"30m","sl":-0.0699,"tp":0.0509,"percentile":85,"thres_diff":0.0011111},
+        {"id":37,"tickerpair":"SHIBUSDT","interval":"15m","sl":-0.0503,"tp":0.0400,"percentile":85,"thres_diff":0.0006043},
+        {"id":38,"tickerpair":"SHIBUSDT","interval":"30m","sl":-0.0922,"tp":0.0565,"percentile":85,"thres_diff":0.0009170}
+    ]
+}
 }
