@@ -51,7 +51,7 @@ def get_signal():
     elif not new_entry and entered:
         #print("exit trade now")
         entered=False
-        strr = f"EXIT pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
+        strr = f"EXIT signal pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}`"
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
         ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
@@ -73,7 +73,7 @@ def get_signal():
         strr+= f"(`{str(datetime.datetime.now())}`)"
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
-    print(f"last ran:{ddtn}")
+    print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
 def get_signal_with_warnings():
     try:
         time.sleep( 0.15*param_choice ) # delay subsequent calls by 0.15sec
