@@ -76,7 +76,7 @@ def get_signal(firstRun=False):
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
 def get_signal_with_warnings(firstRun=False):
     try:
-        time.sleep( 0.15*param_choice ) # delay subsequent calls by 0.15sec
+        time.sleep( 0.05*param_choice ) # delay subsequent calls by 0.05sec
         get_signal(firstRun)
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
