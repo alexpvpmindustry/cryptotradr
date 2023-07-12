@@ -1,10 +1,9 @@
 
 import subprocess
-import sys 
-from glob import glob
+import sys
 import time
 from itertools import zip_longest
-import json,datetime,schedule,random
+import json,datetime,schedule
 
 from trader import write_signal 
 from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal
