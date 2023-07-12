@@ -25,8 +25,15 @@ python testimports.py
 
 ## todos
 
-- a script to start/restart all runs
-- find tickerpairs present on trading platform.
+- ✅ a script to start/restart all runs
+
+- ✅ run multiple signals at the same time.
+- ✅ try binance apis for trading
+- rewrite `run_trades_ver2.py` to scale up to ~750 ticker/interval pairs per 5 minutes
+- update historical data to recent months
+- fix run_trades_ver2, dont Upslow on initial run?
+- report reason for exit, either TP,SL,Exitsignal
+## non-urgent todos
+
+- find tickerpairs present on MT4 trading platform.
 - optimise parameters for tickerpairs.
-- run multiple signals at the same time.
-- try binance apis for trading
