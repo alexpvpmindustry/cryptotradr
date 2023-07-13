@@ -43,8 +43,11 @@ def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit
     else:
         print(f'Error: {response.status_code}',end="")
         return None
-def df_to_dfmpl(df): 
-    dfmpl = df[["open_time","open","high","low","close","volume"]]
+def df_to_dfmpl(df):
+    try:
+        dfmpl = df[["open_time","open","high","low","close","volume"]]
+    except KeyError:
+        raise KeyError(f"keyerror here, df is {str(df)}")
     dfmpl = dfmpl.rename(columns={"open_time":"Date","open":"Open","high":"High","low":"Low","close":"Close","volume":"Volume"})
     dfmpl=dfmpl.set_index("Date")
     dfmpl.index = pd.to_datetime(dfmpl.index+3600*3*1e3,unit="ms")
