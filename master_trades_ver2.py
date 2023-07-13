@@ -52,7 +52,7 @@ if (cur_price-closeprice)/closeprice<0.009:
         # get price_action_signal
         pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
         if pas_strr[:2]=="Up": # shifting of SLTP
-            ping(CRYPTO_SIGNALS2,pas_status+f" pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
+            ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
         if False and loopcounts%10==0:# read exit status (remove the False and for effect)
             stdmean_status=read_signal(symbol,interval)
             if stdmean_status != "EXIT":

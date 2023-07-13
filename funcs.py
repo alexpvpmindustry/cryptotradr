@@ -31,7 +31,14 @@ def get_data(tickerpair,interval,limit=1000,type="live"):
     type: live,sampledata,data
     """
     if type=="live":
-        klines = get_klines_live(tickerpair,interval,limit=limit)  
+        klines = get_klines_live(tickerpair,interval,limit=limit)
+        trys=0
+        while ((klines is None) or (len(klines)==0)):
+            time.sleep(20)
+            klines = get_klines_live(tickerpair,interval,limit=limit)
+            trys+=1
+            if trys>3*10:
+                raise ValueError(f"unable to get klines for {tickerpair}{interval}")
         dfmpl = df_to_dfmpl(pd.DataFrame(klines)).iloc[:-1]# skips the last tick which is incomplete
     elif type=="sampledata":
         df = get_historical_df(tickerpair,interval,folder="kline_data_sample").iloc[-limit:]

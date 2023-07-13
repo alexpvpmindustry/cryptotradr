@@ -53,7 +53,7 @@ def get_signal(firstRun=False):
         strr = f"EXIT signal pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}` "
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
-        ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
+        ping(CRYPTO_SIGNALS2,strr)
     elif new_entry and not entered:
         xx = entry_df.Close
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
@@ -65,13 +65,13 @@ def get_signal(firstRun=False):
         cmd = ["python","master_trades_ver2.py",f"{param_choice}","15",f"{enterdftime}","TEST",f"{xx:.6f}"]
         cmd = " ".join(cmd)
         subprocess.Popen( cmd , shell=True)
-        ping(CRYPTO_SIGNALS2,strr)#requests.post(config["crypto-signals2"],data={"content":strr})
+        ping(CRYPTO_SIGNALS2,strr)
         entered=True
     else:
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
         strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch"
         time.sleep(1*param_choice )
-        ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
+        ping(STATUS_PING2,strr)
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
 def get_signal_with_warnings(firstRun=False):

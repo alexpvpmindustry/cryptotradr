@@ -35,6 +35,7 @@ python testimports.py
 - fix run_trades_ver2, dont Upslow on initial run?
 - reduce status calls to discord ping.
 - ✅ report reason for exit, either TP,SL,Exitsignal
+- limit number of positions
 ## non-urgent todos
 
 - find tickerpairs present on MT4 trading platform.

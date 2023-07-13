@@ -42,7 +42,7 @@ def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit
         return klines
     else:
         print(f'Error: {response.status_code}',end="")
-        return None
+        raise ValueError(f'Error: {response.status_code}')
 def df_to_dfmpl(df):
     try:
         dfmpl = df[["open_time","open","high","low","close","volume"]]
@@ -140,5 +140,5 @@ def read_signal(ticker,interval):
 def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,exitreason):
     strr = f"{ticker},{interval},open{openprice},closeprice{closeprice},"
     strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{exitreason}\n"
-    with open("results_trades.log","a") as f:
+    with open("trade_logs/results_trades2.log","a") as f:
         f.writelines(strr)
