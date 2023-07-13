@@ -70,6 +70,7 @@ def get_signal(firstRun=False):
     else:
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` at `{dfmpl.iloc[-1].name}`"
         strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch"
+        time.sleep(1*param_choice )
         ping(STATUS_PING2,strr)#requests.post(config["status-ping2"],data={"content":strr})
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")

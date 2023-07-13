@@ -1,7 +1,7 @@
 import datetime,time,sys
 from trader import get_current_price,price_action_signal, read_signal,log_trade_results
 import json
-from disc_api import ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji
+from disc_api import ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji
 from trader import market_trade 
 
 ## input arguments
