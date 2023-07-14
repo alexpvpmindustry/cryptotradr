@@ -26,16 +26,18 @@ python testimports.py
 
 ## todos
 
-- ✅ a script to start/restart all runs
-
-- ✅ run multiple signals at the same time.
-- ✅ try binance apis for trading
+- some code to validate the timing of prev candlestick
+- limit number of positions? using binanceexceptions
 - rewrite `run_trades_ver2.py` to scale up to ~750 ticker/interval pairs per 5 minutes
-- ✅ update historical data to recent months
 - fix run_trades_ver2, dont Upslow on initial run?
 - reduce status calls to discord ping.
+
+- ✅ a script to start/restart all runs
+- ✅ run multiple signals at the same time.
+- ✅ try binance apis for trading
+- ✅ update historical data to recent months
 - ✅ report reason for exit, either TP,SL,Exitsignal
-- limit number of positions
+
 ## non-urgent todos
 
 - find tickerpairs present on MT4 trading platform.

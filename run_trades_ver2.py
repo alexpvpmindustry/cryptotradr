@@ -76,7 +76,7 @@ def get_signal(firstRun=False):
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
 def get_signal_with_warnings(firstRun=False):
     try:
-        time.sleep( 0.05*param_choice ) # delay subsequent calls by 0.05sec
+        time.sleep( 0.1*param_choice ) # delay subsequent calls by 0.1sec
         get_signal(firstRun)
     except Exception as e:
         ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
@@ -85,9 +85,9 @@ print("starting")
 ddtn=datetime.datetime.now()
 if "m" in interval:
     intvl = int(interval.split("m")[0]); 
-    delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+12) # 12 seconds after 
+    delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+22) # 22 seconds after 0th min
     time.sleep(delay)
-    schedule.every(intvl).minutes.at(":02").do(get_signal_with_warnings) # run this at 22:30:04
+    schedule.every(intvl).minutes.at(":06").do(get_signal_with_warnings)
 else:
     intvl = int(interval.split("h")[0])
     get_signal_with_warnings(True)

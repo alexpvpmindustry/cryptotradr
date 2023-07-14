@@ -53,10 +53,13 @@ if (cur_price-closeprice)/closeprice<0.009:
         pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
         if pas_strr[:2]=="Up": # shifting of SLTP
             ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
-        if False and loopcounts%10==0:# read exit status (remove the False and for effect)
+        if loopcounts%10==0:# read exit status (remove the False and for effect)
             stdmean_status=read_signal(symbol,interval)
-            if stdmean_status != "EXIT":
-                stdmean_status = "HOLD"
+            #if stdmean_status != "EXIT":
+            #    stdmean_status = "HOLD"
+            if stdmean_status == "EXIT": #checks if we are exiting becos of signal
+                log_trade_results(symbol,interval,enter_data['price'],cur_price, dfname,ent_time,str(datetime.datetime.now())[:-4],reason="exit_from_read_signal")
+            stdmean_status = "HOLD" # reset this signal since we are not using it.
         status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
         loopcounts+=1
         if status=="HOLD":
