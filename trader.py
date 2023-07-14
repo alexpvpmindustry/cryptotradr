@@ -1,6 +1,6 @@
 
 #import csv
-import json,datetime,requests
+import json,datetime,requests,time
 import pandas as pd
 from glob import glob
 from binance.client import Client 
@@ -20,6 +20,13 @@ def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit
     if end_time:
         params['endTime'] = end_time
     response = requests.get(url, params=params)
+    counts=0
+    while (response.status_code !=200):
+        time.sleep(5)
+        response = requests.get(url, params=params)
+        counts+=1
+        if counts>10:
+            break
     if response.status_code == 200:
         klines_data = response.json()
         klines = []
@@ -42,7 +49,7 @@ def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit
         return klines
     else:
         print(f'Error: {response.status_code}',end="")
-        raise ValueError(f'Error: {response.status_code}')
+        raise ValueError(f'line 52 Error: {response.status_code}, counts={counts}')
 def df_to_dfmpl(df):
     try:
         dfmpl = df[["open_time","open","high","low","close","volume"]]
