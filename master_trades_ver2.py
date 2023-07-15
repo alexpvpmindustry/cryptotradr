@@ -1,8 +1,7 @@
 import datetime,time,sys
-from trader import get_current_price,price_action_signal, read_signal,log_trade_results
+from trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results
 import json
 from disc_api import ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
-from trader import market_trade 
 
 ## input arguments
 param_choice = 0 
@@ -29,8 +28,11 @@ if (cur_price-closeprice)/closeprice<0.009:
     qty = qtyUSD/cur_price
     a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
     emoji=get_random_emoji()
+    strr=f"{symbol}{interval} pc{param_choice}{emoji}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)"
     if a1=="FILLED":# we have entered the trade
-        ping(CRYPTO_SIGNALS2,f"Entered {symbol}{interval} pc{param_choice}{emoji}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)")
+        ping(CRYPTO_SIGNALS2,f"Entered {strr}")
+    elif a1=="INSUFFICIENTBALANCE":
+        ping(CRYPTO_SIGNALS2,f"INSUFFICIENTBALANCE for entering {strr}")
     else:
         ping(CRYPTO_SIGNALS2,f"ENTER ERROR pc{param_choice}{emoji} {SIGNALROLE}")
         assert False

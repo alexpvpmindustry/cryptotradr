@@ -3,7 +3,9 @@
 import json,datetime,requests,time
 import pandas as pd
 from glob import glob
-from binance.client import Client 
+from binance.client import Client
+from binance.exceptions import BinanceAPIException
+
 config = json.load(open("secrets.config","r"))
 bin_api_key=config["bin_api_key"]
 bin_api_secr=config["bin_api_secr"]
@@ -81,13 +83,17 @@ def market_trade(symbol,quantity,buy=True,test=True):
                           'commission': '0.01468350','commissionAsset': 'TUSD',
                           'tradeId': 1141128}],"")
     else:
-        if buy:
-            c=client.order_market_buy(symbol=symbol,quantity=quantity)
-            return c["status"],c["fills"],c
-        else:
-            c=client.order_market_sell(symbol=symbol,quantity=quantity)
-            return c["status"],c["fills"],c
-    raise NotImplementedError("this is wrong")
+        try:
+            if buy:
+                c=client.order_market_buy(symbol=symbol,quantity=quantity)
+                return c["status"],c["fills"],c
+            else:
+                c=client.order_market_sell(symbol=symbol,quantity=quantity)
+                return c["status"],c["fills"],c
+        except BinanceAPIException as e:
+            if "Account has insufficient balance for requested action." in str(e):
+                return "INSUFFICIENTBALANCE",None,None
+
 # trading strats
 def strat_tpsl1(enter_data,strat_data,cur_price):# only HOLD or SELL
     # strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl1"}

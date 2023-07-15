@@ -1,10 +1,13 @@
 from itertools import zip_longest
 import time
 import numpy as np
-from trader import *
+#from trader import *
 from collections import Counter
 import datetime
 import json,requests
+import pandas as pd
+
+from trader import df_to_dfmpl, get_historical_df, get_klines_live
 
 # loading config and constants
 config = json.load(open("secrets.config","r")) 
@@ -121,8 +124,7 @@ def parse_signals_and_send_msg(entrys,exits,dfmpl,entry_signals,tickerpair,inter
         entered=False
         strr = f"exit {tickerpair} {interval} {dfmpl.iloc[-1].Close}"
         requests.post(config["crypto-signals2"],data={"content":strr})
-    elif new_entry and not entered:
-        entry_time_utc_ms = entry_df.name.value//1_000_000
+    elif new_entry and not entered: 
         xx = entry_df.Close
         strr = tickerpair+" "+ ("BUY  " if buy==1 else "SELL ")+f"{xx}" 
         strr += f" tp {xx*(1+0.01*buy):.4f} sl {xx*(1-0.005*buy):.4f}\n"
@@ -240,7 +242,7 @@ def plot_hl_ax(ax,hl_pair,hl_data,bres=0.1,buyonly=False): #bres=0.1 # bin resol
     if buyonly:
         buy_types =[1,1]
     vals=[]
-    for buy_ in [1,-1]:
+    for buy_ in buy_types:
         highs=[(high-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
         lows=[(low-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
         profit_=[buy*(exi-ent)/ent*100 for ent,exi,buy,high,low in hl_pair if buy==buy_]
