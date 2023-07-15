@@ -93,6 +93,8 @@ def market_trade(symbol,quantity,buy=True,test=True):
         except BinanceAPIException as e:
             if "Account has insufficient balance for requested action." in str(e):
                 return "INSUFFICIENTBALANCE",None,None
+            else:
+                raise Exception("nani?") from e
 
 # trading strats
 def strat_tpsl1(enter_data,strat_data,cur_price):# only HOLD or SELL
