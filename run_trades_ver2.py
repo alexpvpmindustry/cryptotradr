@@ -90,7 +90,7 @@ def get_signal_with_warnings(firstRun=False):
         time.sleep( 0.1*param_choice ) # delay subsequent calls by 0.1sec
         get_signal(firstRun)
     except Exception as e:
-        ping(ERROR_PING2,f"error pc{param_choice} {ALEXPING}"+str(e))
+        ping(ERROR_PING2,f"error pc{param_choice} {tickerpair}{interval} {ALEXPING}"+str(e))
         raise
 print("starting")
 ddtn=datetime.datetime.now()
