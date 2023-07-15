@@ -38,7 +38,7 @@ if (cur_price-closeprice)/closeprice<0.009:
         assert False
     # continous loop until exit or sell signal is recieved
     status="HOLD"
-    loopcounts=0
+    loopcounts=1
 
     ent_time=str(datetime.datetime.now())[:-4].replace(" ","_")
     enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
@@ -55,7 +55,7 @@ if (cur_price-closeprice)/closeprice<0.009:
         pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
         if pas_strr[:2]=="Up": # shifting of SLTP
             ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
-        if loopcounts%10==0:# read exit status (remove the False and for effect)
+        if loopcounts%6==0:# read exit status (remove the False and for effect)
             stdmean_status=read_signal(symbol,interval)
             #if stdmean_status != "EXIT":
             #    stdmean_status = "HOLD"

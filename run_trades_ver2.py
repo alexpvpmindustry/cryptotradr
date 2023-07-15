@@ -5,8 +5,8 @@ import time
 from itertools import zip_longest
 import json,datetime,schedule
 
-from trader import write_signal 
-from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal, validate_dfmpl
+from trader import write_signal
+from funcs import get_data,get_entrys_exits,get_entry_signals, validate_dfmpl
 from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
 
 ## input arguments
