@@ -70,3 +70,8 @@ SOLUSDT,15m,open28.1,closeprice27.73,dfname2023-07-14_18:30:00,starttime2023-07-
 BCHUSDT,5m,open274.1,closeprice272.1,dfname2023-07-14_18:15:00,starttime2023-07-14_23:20:07.10,exittime2023-07-15 00:28:17.15,exitreasonReason: Stop L-0.72%
 ETHUSDT,5m,open2002.72,closeprice1993.0,dfname2023-07-14_18:15:00,starttime2023-07-14_23:20:07.93,exittime2023-07-15 00:29:33.39,exitreasonReason: Stop L-0.45%
 LTCUSDT,5m,open101.0,closeprice100.29,dfname2023-07-14_19:25:00,starttime2023-07-15_00:30:05.57,exittime2023-07-15 00:31:03.52,exitreasonReason: Stop L-0.68%
+XRPUSDT,15m,open0.7244,closeprice0.7181,dfname2023-07-15_00:15:00,starttime2023-07-15_05:30:11.04,exittime2023-07-15 05:33:36.92,exitreasonReason: Stop L-0.85%
+BCHUSDT,5m,open261.7,closeprice262.9,dfname2023-07-15_02:15:00,starttime2023-07-15_07:20:08.75,exittime2023-07-15 08:02:18.02,exitreasonReason: Stop L0.47%
+XRPUSDT,5m,open0.7094,closeprice0.7072,dfname2023-07-15_03:05:00,starttime2023-07-15_08:10:08.77,exittime2023-07-15 08:11:32.37,exitreasonReason: Stop L-0.31%
+LTCUSDT,5m,open95.39,closeprice95.2,dfname2023-07-15_04:30:00,starttime2023-07-15_09:35:09.12,exittime2023-07-15 09:49:06.32,exitreasonReason: Stop L-0.15%
+XRPUSDT,5m,open0.7105,closeprice0.7156,dfname2023-07-15_04:40:00,starttime2023-07-15_09:45:09.08,exittime2023-07-15 09:54:08.27,exitreasonReason: Stop L0.99%
