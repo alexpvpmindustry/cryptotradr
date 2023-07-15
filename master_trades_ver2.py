@@ -34,6 +34,7 @@ if (cur_price-closeprice)/closeprice<0.009:
         ping(CRYPTO_LOGS2,f"Entered {strr}")
     elif a1=="INSUFFICIENTBALANCE":
         ping(CRYPTO_SIGNALS2,f"INSUFFICIENTBALANCE for entering {strr}")
+        assert False
     else:
         ping(CRYPTO_SIGNALS2,f"ENTER ERROR pc{param_choice}{emoji} {SIGNALROLE}")
         assert False
