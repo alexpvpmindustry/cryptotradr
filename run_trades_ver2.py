@@ -30,6 +30,7 @@ new_entry=False
 def get_signal(firstRun=False):
     global new_entry, entered,thres_diff,percentile,interval,tickerpair 
     dfmpl = get_data(tickerpair,interval,limit=100,type="live")
+    # check that dfmpl contains the last candlestick
     entrys,exits,_,_,_,_,_,_,thres_diff = get_entrys_exits(dfmpl,percentile,thres_diff)
     #get all entry signal
     entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
