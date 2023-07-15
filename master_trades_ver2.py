@@ -1,7 +1,7 @@
 import datetime,time,sys
 from trader import get_current_price,price_action_signal, read_signal,log_trade_results
 import json
-from disc_api import ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji
+from disc_api import ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
 from trader import market_trade 
 
 ## input arguments
@@ -59,6 +59,11 @@ if (cur_price-closeprice)/closeprice<0.009:
             #    stdmean_status = "HOLD"
             if stdmean_status == "EXIT": #checks if we are exiting becos of signal
                 log_trade_results(symbol,interval,enter_data['price'],cur_price, dfname,ent_time,str(datetime.datetime.now())[:-4],reason="exit_from_read_signal")
+                change = (cur_price-enter_data['price'])/enter_data['price']
+                sign = '⬆️' if change>0 else '⬇️'
+                strr = f"ExitSignal🪃 {symbol}{interval} {sign}pc{param_choice}{emoji} `{cur_price:.4f}` "
+                strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
+                ping(CRYPTO_LOGS2,strr)
             stdmean_status = "HOLD" # reset this signal since we are not using it.
         status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
         loopcounts+=1
@@ -83,6 +88,7 @@ if (cur_price-closeprice)/closeprice<0.009:
             strr+= "Reason: Exit signal from PAS\n"
             reason+="Reason: Exit signal from PAS"
         ping(CRYPTO_SIGNALS2,strr)
+        ping(CRYPTO_LOGS2,strr)
         log_trade_results(symbol,interval,enter_data['price'],cur_price,
                         dfname,ent_time,exittime,reason)
     else:

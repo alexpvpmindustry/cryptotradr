@@ -7,7 +7,7 @@ config = json.load(open("secrets.config","r"))
 STATUS_PING2 = config["status-ping2"]
 CRYPTO_SIGNALS2= config["crypto-signals2"]
 ERROR_PING2= config["error-ping2"]
-
+CRYPTO_LOGS2=config["crypto-logs2"]
 #roles
 SIGNALROLE="<@&1126499478342475807>"
 ALEXPING="<@612861256189083669>"
