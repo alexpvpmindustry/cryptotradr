@@ -17,9 +17,11 @@ param_choice_max = 1
 if len(sys.argv)>1:
     param_choice_min = int(sys.argv[1])
     param_choice_min = int(sys.argv[2])
+    interval_choice = sys.argv[3]
 class signal_object:
     def __init__(self,param_choice):
         self.param_choice=param_choice
+        self.interval=None
         self.load_params()
     def load_params(self):
         self.trade_params = json.load(open("trade_params.json","r"))
@@ -111,21 +113,27 @@ class signal_object:
         except Exception as e:
             ping(ERROR_PING2,f"error pc{self.param_choice} {self.tickerpair}{self.interval} {ALEXPING}"+str(e))
             raise
-    def add_to_schedule(self): # this needs to be fixed
-        ddtn=datetime.datetime.now()
-        if "m" in self.interval:
-            intvl = int(self.interval.split("m")[0]); 
-            delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+22) # 22 seconds after 0th min
-            time.sleep(delay)
-            schedule.every(intvl).minutes.at(":06").do(self.get_signal_with_warnings)
-print("starting")
-list_of_objects=[]
-for param_choice in range(param_choice_min,param_choice_max+1):
-    list_of_objects.append(signal_object(param_choice))
-while True:
-    schedule.run_pending()
-    time.sleep(1)
 
+print("starting")
+list_of_signal_objects=[]
+for param_choice in range(param_choice_min,param_choice_max+1):
+    s= signal_object(param_choice)
+    if s.interval == interval_choice:
+        list_of_signal_objects.append(s)
+#def add_to_schedule(self): # this needs to be fixed
+ddtn=datetime.datetime.now()
+if "m" in interval_choice:
+    intvl = int(interval_choice.split("m")[0]); 
+    delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+22) # 22 seconds after 0th min
+    time.sleep(delay)
+    for s in list_of_signal_objects:
+        schedule.every(intvl).minutes.at(":03").do(s)
+if len(list_of_signal_objects)>0:
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+else:
+    print(f"no valid symbols for this interval {interval_choice}, ending")
 
 
 
