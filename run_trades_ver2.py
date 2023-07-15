@@ -9,6 +9,8 @@ from trader import write_signal
 from funcs import get_data,get_entrys_exits,get_entry_signals, validate_dfmpl
 from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
 
+TZOFFSET=5*60*60 
+
 ## input arguments
 param_choice = 0 
 if len(sys.argv)>1:
@@ -44,8 +46,8 @@ def get_signal(firstRun=False):
     entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
     new_entry=False
     entry_df= None;buy=None
-    #todo , this will still report pervious entries as new entry on start
-    # todo redo run trades
+    # todo , this will still report pervious entries as new entry on start
+    # todo redo run trades (possibly fixed)
     for entry,exit in zip_longest(entrys,exits,fillvalue=None):
         if exit is None: # missing exit signal, so its a new enter signal
             buy_list = [ buy for ( entry_, buy, _ ) in entry_signals if entry_==entry]
@@ -55,6 +57,16 @@ def get_signal(firstRun=False):
                 buy=buy_list[0]
     if new_entry:
         assert buy==1
+        if not entered:
+            # ensure that the candlestick is the latest candlestick
+            timediff_minutes = ((datetime.datetime.now() - entry_df.name).seconds - TZOFFSET)/60
+            intvl = int(interval.split("m")[0])
+            assert timediff_minutes>intvl # candle should open more than "interval" minutes ago
+            if timediff_minutes>intvl*1.5: # next candle should be at least in the first half of the interval
+                new_entry=False
+                consolelog()
+                return
+    # at this point, entry_df should be the latest completed candle. at most half interval towards the next candle.
     if new_entry and entered:
         #print("hold")
         write_signal(tickerpair,interval,signal="HOLD",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
@@ -83,6 +95,8 @@ def get_signal(firstRun=False):
         strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch"
         time.sleep(1*param_choice )
         ping(STATUS_PING2,strr)
+    consolelog()
+def consolelog():
     ddtn=datetime.datetime.now()
     print(f"last ran:{ddtn}, new_entry{new_entry}, entered{entered},{tickerpair},{interval}")
 def get_signal_with_warnings(firstRun=False):
