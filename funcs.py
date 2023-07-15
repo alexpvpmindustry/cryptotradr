@@ -9,7 +9,7 @@ import json,requests
 # loading config and constants
 config = json.load(open("secrets.config","r")) 
 role="<@&1126499478342475807>"
-
+TZOFFSET=5*60*60 # time zone offset
 
 # for data analysis
 def intpl(x,x1=0,x2=100,y1=0,y2=255):
@@ -39,7 +39,7 @@ def get_data(tickerpair,interval,limit=1000,type="live"):
             trys+=1
             if trys>3*10:
                 raise ValueError(f"unable to get klines for {tickerpair}{interval}")
-        dfmpl = df_to_dfmpl(pd.DataFrame(klines)).iloc[:-1]# skips the last tick which is incomplete
+        dfmpl = df_to_dfmpl(pd.DataFrame(klines))#.iloc[:-1]# skips the last tick which is incomplete
     elif type=="sampledata":
         df = get_historical_df(tickerpair,interval,folder="kline_data_sample").iloc[-limit:]
         dfmpl = df_to_dfmpl(df)
@@ -49,6 +49,14 @@ def get_data(tickerpair,interval,limit=1000,type="live"):
     else:
         assert False
     return dfmpl
+
+def validate_dfmpl(dfmpl): 
+    td2 = (datetime.datetime.now() - dfmpl.iloc[-1].name) 
+    if ((td2.seconds-TZOFFSET)/60)<2: # last candlestick started less than 2 mins ago
+        return True,dfmpl.iloc[:-1] # skips the last df
+    else:
+        return False,None
+    
 def get_entrys_exits(dfmpl,percentile,thres_diff):
     xvals=np.arange(len(dfmpl.Close))
     r_high_sm = dfmpl.High.rolling(14).std()/dfmpl.High.rolling(14).mean()

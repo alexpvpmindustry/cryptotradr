@@ -76,7 +76,7 @@ def get_current_price(symbol,sell=True):
         current_price=float(data["asks"][0][0]) # price for selling right now
     return current_price
 def market_trade(symbol,quantity,buy=True,test=True):
-    if test:
+    if test: #todo: just get the current price
         return ("FILLED",[{'price': '97.89000000','qty': '0.15000000',
                           'commission': '0.01468350','commissionAsset': 'TUSD',
                           'tradeId': 1141128}],"")
@@ -132,7 +132,7 @@ def price_action_signal(enter_data,strat_data,cur_price):
     elif enter_data["strat"]=="strat_tpsl1":
         return strat_tpsl1(enter_data,strat_data,cur_price)
     else:
-        raise NotImplementedError("todo strat :(")
+        raise NotImplementedError("#todo strat :(")
 def write_signal(ticker,interval,signal,closeprice,dfname):
     strr = f"{signal},{closeprice},{str(dfname).replace(' ','_')},"
     strr+= f"{str(datetime.datetime.now()).replace(' ','_')}\n"

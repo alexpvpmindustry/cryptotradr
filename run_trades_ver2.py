@@ -6,7 +6,7 @@ from itertools import zip_longest
 import json,datetime,schedule
 
 from trader import write_signal 
-from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal
+from funcs import get_data,get_entrys_exits,get_entry_signals,read_signal, validate_dfmpl
 from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
 
 ## input arguments
@@ -28,9 +28,17 @@ entered=False
 new_entry=False
 
 def get_signal(firstRun=False):
-    global new_entry, entered,thres_diff,percentile,interval,tickerpair 
-    dfmpl = get_data(tickerpair,interval,limit=100,type="live")
-    # check that dfmpl contains the last candlestick
+    global new_entry, entered,thres_diff,percentile,interval,tickerpair
+    correct=False;trys=0
+    while not correct:
+        dfmpl = get_data(tickerpair,interval,limit=100,type="live")
+        # check that dfmpl contains the last candlestick
+        correct,dfmpl = validate_dfmpl(dfmpl)
+        if not correct:
+            time.sleep(1)
+        if trys>60:#something might be wrong here,
+            raise Exception(f"pc{param_choice}{tickerpair}{interval} too many tries without getting last candlestick {datetime.datetime.now()}")
+        trys+=1
     entrys,exits,_,_,_,_,_,_,thres_diff = get_entrys_exits(dfmpl,percentile,thres_diff)
     #get all entry signal
     entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
