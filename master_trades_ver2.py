@@ -31,7 +31,6 @@ if (cur_price-closeprice)/closeprice<0.009:
     strr=f"{symbol}{interval} pc{param_choice}{emoji}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)"
     if a1=="FILLED":# we have entered the trade
         ping(CRYPTO_SIGNALS2,f"Entered {strr}")
-        ping(CRYPTO_LOGS2,f"Entered {strr}")
     elif a1=="INSUFFICIENTBALANCE":
         ping(CRYPTO_SIGNALS2,f"INSUFFICIENTBALANCE for entering {strr}")
         assert False

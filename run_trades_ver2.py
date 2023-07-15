@@ -44,6 +44,8 @@ def get_signal(firstRun=False):
     entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
     new_entry=False
     entry_df= None;buy=None
+    #todo , this will still report pervious entries as new entry on start
+    # todo redo run trades
     for entry,exit in zip_longest(entrys,exits,fillvalue=None):
         if exit is None: # missing exit signal, so its a new enter signal
             buy_list = [ buy for ( entry_, buy, _ ) in entry_signals if entry_==entry]
