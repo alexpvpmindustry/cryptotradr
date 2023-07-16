@@ -48,6 +48,7 @@ try:
         strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl1"}
 
         stdmean_status="HOLD"
+        stdmean_status_exited=False
         pas_status="HOLD"
         pas_strr=""
         while status=="HOLD":
@@ -57,7 +58,7 @@ try:
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
             if pas_strr[:2]=="Up": # shifting of SLTP
                 ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
-            if loopcounts%6==0:# read exit status (remove the False and for effect)
+            if loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
                 stdmean_status=read_signal(symbol,interval)
                 #if stdmean_status != "EXIT":
                 #    stdmean_status = "HOLD"
@@ -68,6 +69,7 @@ try:
                     strr = f"ExitSignal🪃 {symbol}{interval} {sign}pc{param_choice}{emoji} `{cur_price:.4f}` "
                     strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
                     ping(CRYPTO_LOGS2,strr)
+                    stdmean_status_exited=True
                 stdmean_status = "HOLD" # reset this signal since we are not using it.
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
