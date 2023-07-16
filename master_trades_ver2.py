@@ -51,10 +51,8 @@ try:
         stdmean_status_exited=False
         pas_status="HOLD"
         pas_strr=""
-        while status=="HOLD":
-            # get current price
-            cur_price = get_current_price(symbol)
-            # get price_action_signal
+        while status=="HOLD": 
+            cur_price = get_current_price(symbol) 
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
             ## start of update routine
             updated=False;update_list=[] 
