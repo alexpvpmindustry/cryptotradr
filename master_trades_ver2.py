@@ -56,6 +56,22 @@ try:
             cur_price = get_current_price(symbol)
             # get price_action_signal
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
+            ## start of update routine
+            updated=False;update_list=[] 
+            update_list.append(pas_strr[:6])
+            while (pas_strr[:2]=="Up"):
+                # repeat until its not up anymore, then take the prev sl and tp
+                prev_strat_data = strat_data.copy()
+                prev_pas_status = pas_status
+                prev_pas_strr = pas_strr
+                pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
+                if pas_strr[:2]=="Up":
+                    updated=True
+                    update_list.append(pas_strr[:6]) 
+            if updated:
+                pas_status,strat_data,pas_strr = prev_pas_status,prev_strat_data.copy(),prev_pas_strr
+                pas_strr = " ".join(update_list[:-1])+" "+pas_strr
+            ## end of update routine
             if pas_strr[:2]=="Up": # shifting of SLTP
                 ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
             if loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
