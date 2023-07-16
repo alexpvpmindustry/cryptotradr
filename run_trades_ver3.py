@@ -25,7 +25,7 @@ class signal_object:
         self.load_params()
     def load_params(self):
         self.trade_params = json.load(open("trade_params.json","r"))
-        self.trade_param = self.trade_params["ver3"]["params"][self.param_choice]
+        self.trade_param = self.trade_params["ver2"]["params"][self.param_choice]
         self.thres_diff = float(self.trade_param["thres_diff"])
         self.tickerpair = self.trade_param["tickerpair"]
         self.interval = self.trade_param["interval"]
