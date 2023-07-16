@@ -61,6 +61,26 @@ def validate_dfmpl(dfmpl):
         return False,None
     
 def get_entrys_exits(dfmpl,percentile,thres_diff):
+    xvals=np.arange(len(dfmpl.Close));windowsize=14
+    r_high_sm = dfmpl.High.rolling(windowsize).std()/dfmpl.High.rolling(windowsize).mean()
+    r_low_sm = dfmpl.Low.rolling(windowsize).std()/dfmpl.Low.rolling(windowsize).mean()
+    r_sm=r_low_sm*0.5+r_high_sm*0.5
+    r_sm_diff = r_sm.diff()
+
+    if not thres_diff:
+        thres_diff = np.percentile(r_sm_diff.values[np.where(~np.isnan(r_sm_diff.values))],percentile)
+
+    mkoffset = 1.01
+    crossup=np.where(np.diff((r_sm_diff>thres_diff)*1.,1)>0)[0]
+    scatterup = [ dfmpl.Close.iloc[i]*mkoffset if i in crossup else np.nan for i in xvals]
+    crossdn=np.where(np.diff((r_sm_diff>thres_diff)*1.,1)<0)[0]
+    scatterdn = [ dfmpl.Close.iloc[i]*mkoffset if i in crossdn else np.nan for i in xvals]
+
+    entrys = np.where(~np.isnan(scatterup))[0]+1
+    exits = np.where(~np.isnan(scatterdn))[0]+1
+    return entrys,exits,scatterup,scatterdn,r_high_sm,r_low_sm,r_sm,r_sm_diff,thres_diff
+
+def get_entrys_exits_old(dfmpl,percentile,thres_diff):
     xvals=np.arange(len(dfmpl.Close))
     r_high_sm = dfmpl.High.rolling(14).std()/dfmpl.High.rolling(14).mean()
     r_low_sm = dfmpl.Low.rolling(14).std()/dfmpl.Low.rolling(14).mean()
@@ -81,6 +101,7 @@ def get_entrys_exits(dfmpl,percentile,thres_diff):
     entrys = np.where(~np.isnan(scatterup))[0]
     exits = np.where(~np.isnan(scatterdn))[0]
     return entrys,exits,scatterup,scatterdn,r_high_sm,r_low_sm,r_sm,r_sm_diff,thres_diff
+
 def get_entry_signals(entrys,dfmpl,onlybuy=False):    #get all entry signal
     entry_signals = []
     for entry in entrys:
