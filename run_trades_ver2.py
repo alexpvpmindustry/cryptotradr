@@ -61,6 +61,7 @@ def get_signal(firstRun=False):
             # ensure that the candlestick is the latest candlestick
             timediff_minutes = ((datetime.datetime.now() - entry_df.name).seconds - TZOFFSET)/60
             intvl = int(interval.split("m")[0])
+            ping(STATUS_PING2,f"new entry, but checking timediff{timediff_minutes:.2f} intvl{intvl}")
             assert timediff_minutes>intvl # candle should open more than "interval" minutes ago
             if timediff_minutes>intvl*1.5: # next candle should be at least in the first half of the interval
                 new_entry=False
