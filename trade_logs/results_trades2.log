@@ -75,3 +75,5 @@ BCHUSDT,5m,open261.7,closeprice262.9,dfname2023-07-15_02:15:00,starttime2023-07-
 XRPUSDT,5m,open0.7094,closeprice0.7072,dfname2023-07-15_03:05:00,starttime2023-07-15_08:10:08.77,exittime2023-07-15 08:11:32.37,exitreasonReason: Stop L-0.31%
 LTCUSDT,5m,open95.39,closeprice95.2,dfname2023-07-15_04:30:00,starttime2023-07-15_09:35:09.12,exittime2023-07-15 09:49:06.32,exitreasonReason: Stop L-0.15%
 XRPUSDT,5m,open0.7105,closeprice0.7156,dfname2023-07-15_04:40:00,starttime2023-07-15_09:45:09.08,exittime2023-07-15 09:54:08.27,exitreasonReason: Stop L0.99%
+ARBUSDT,5m,open1.2802,closeprice1.3214,dfname2023-07-15_12:40:00,starttime2023-07-15_17:45:11.10,exittime2023-07-15 17:57:01.55,exitreasonReason: Stop L3.23%
+XRPUSDT,5m,open0.7222,closeprice0.7241,dfname2023-07-15_13:10:00,starttime2023-07-15_18:15:09.59,exittime2023-07-15 18:32:51.29,exitreasonReason: Stop L0.34%
