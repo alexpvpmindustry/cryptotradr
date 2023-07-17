@@ -15,6 +15,7 @@ trade_signals/*
 # plotting data
 5_9_2_data/
 5_9_3_data/
+*analysisdata*/
 
 *.config 
 *figures*
