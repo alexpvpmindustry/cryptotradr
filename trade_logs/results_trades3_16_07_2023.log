@@ -1,0 +1,41 @@
+SOLUSDT,5m,open28.1,closeprice28.09,dfname2023-07-16_20:20:00,starttime2023-07-17_01:25:10.65,exittime2023-07-17 01:30:11.39,exitreasonexit_from_read_signal
+XRPUSDT,5m,open0.7745,closeprice0.7733,dfname2023-07-16_20:35:00,starttime2023-07-17_01:40:10.21,exittime2023-07-17 01:49:05.41,exitreasonReason: Stop L-0.09%
+XRPUSDT,5m,open0.7824,closeprice0.7846,dfname2023-07-16_21:05:00,starttime2023-07-17_02:10:09.54,exittime2023-07-17 02:16:42.39,exitreasonReason: Stop L0.34%
+SOLUSDT,5m,open28.1,closeprice27.82,dfname2023-07-16_20:20:00,starttime2023-07-17_01:25:10.65,exittime2023-07-17 02:27:02.73,exitreasonReason: Stop L-0.93%
+AVAXUSDT,5m,open14.43,closeprice14.4,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:10.74,exittime2023-07-17 05:35:11.78,exitreasonexit_from_read_signal
+LTCUSDT,5m,open94.4,closeprice94.24,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:11.48,exittime2023-07-17 05:35:12.06,exitreasonexit_from_read_signal
+MATICUSDT,5m,open0.781,closeprice0.7801,dfname2023-07-17_00:20:00,starttime2023-07-17_05:25:09.93,exittime2023-07-17 05:35:16.05,exitreasonexit_from_read_signal
+XRPUSDT,5m,open0.7504,closeprice0.7545,dfname2023-07-17_00:10:00,starttime2023-07-17_05:15:09.80,exittime2023-07-17 05:39:10.76,exitreasonReason: Stop L0.56%
+WAVESUSDT,5m,open2.0,closeprice2.0,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:11.54,exittime2023-07-17 05:45:25.22,exitreasonexit_from_read_signal
+ARBUSDT,5m,open1.2767,closeprice1.2887,dfname2023-07-17_00:30:00,starttime2023-07-17_05:35:11.03,exittime2023-07-17 06:05:07.74,exitreasonexit_from_read_signal
+AVAXUSDT,5m,open14.43,closeprice14.34,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:10.74,exittime2023-07-17 06:59:19.09,exitreasonReason: Stop L-0.56%
+ARBUSDT,5m,open1.2767,closeprice1.2784,dfname2023-07-17_00:30:00,starttime2023-07-17_05:35:11.03,exittime2023-07-17 07:06:53.61,exitreasonReason: Stop L0.15%
+MATICUSDT,5m,open0.781,closeprice0.7746,dfname2023-07-17_00:20:00,starttime2023-07-17_05:25:09.93,exittime2023-07-17 07:21:16.45,exitreasonReason: Stop L-0.81%
+WAVESUSDT,5m,open2.0,closeprice1.989,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:11.54,exittime2023-07-17 07:22:47.85,exitreasonReason: Stop L-0.53%
+LTCUSDT,5m,open94.4,closeprice93.73,dfname2023-07-17_00:25:00,starttime2023-07-17_05:30:11.48,exittime2023-07-17 07:27:06.35,exitreasonReason: Stop L-0.68%
+SOLUSDT,5m,open27.69,closeprice27.81,dfname2023-07-17_03:15:00,starttime2023-07-17_08:20:09.90,exittime2023-07-17 08:45:32.75,exitreasonexit_from_read_signal
+ARBUSDT,5m,open1.2915,closeprice1.29,dfname2023-07-17_03:15:00,starttime2023-07-17_08:20:10.30,exittime2023-07-17 08:45:33.27,exitreasonexit_from_read_signal
+SOLUSDT,5m,open27.69,closeprice27.77,dfname2023-07-17_03:15:00,starttime2023-07-17_08:20:09.90,exittime2023-07-17 08:46:18.94,exitreasonReason: Stop L0.30%
+ARBUSDT,5m,open1.2915,closeprice1.2872,dfname2023-07-17_03:15:00,starttime2023-07-17_08:20:10.30,exittime2023-07-17 08:46:29.74,exitreasonReason: Stop L-0.24%
+SOLUSDT,15m,open27.88,closeprice27.68,dfname2023-07-17_03:30:00,starttime2023-07-17_08:45:11.28,exittime2023-07-17 09:00:22.94,exitreasonexit_from_read_signal
+BCHUSDT,5m,open252.8,closeprice252.5,dfname2023-07-17_04:05:00,starttime2023-07-17_09:10:08.97,exittime2023-07-17 09:20:15.07,exitreasonexit_from_read_signal
+AVAXUSDT,5m,open14.42,closeprice14.4,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:12.39,exittime2023-07-17 09:45:13.26,exitreasonexit_from_read_signal
+ETHUSDT,5m,open1926.81,closeprice1926.19,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:14.32,exittime2023-07-17 09:45:15.77,exitreasonexit_from_read_signal
+BNBUSDT,5m,open242.7,closeprice243.4,dfname2023-07-17_04:10:00,starttime2023-07-17_09:15:10.15,exittime2023-07-17 09:45:38.14,exitreasonexit_from_read_signal
+BTCUSDT,5m,open30307.76,closeprice30300.95,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:12.36,exittime2023-07-17 09:50:19.27,exitreasonexit_from_read_signal
+LTCUSDT,5m,open93.48,closeprice93.24,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:14.40,exittime2023-07-17 09:50:20.53,exitreasonexit_from_read_signal
+ARBUSDT,5m,open1.3175,closeprice1.3097,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:14.48,exittime2023-07-17 09:55:27.29,exitreasonexit_from_read_signal
+WAVESUSDT,5m,open1.997,closeprice1.999,dfname2023-07-17_04:30:00,starttime2023-07-17_09:35:10.26,exittime2023-07-17 09:55:27.84,exitreasonexit_from_read_signal
+XRPUSDT,5m,open0.7564,closeprice0.754,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:12.81,exittime2023-07-17 09:55:29.95,exitreasonReason: Stop L-0.31%
+MATICUSDT,5m,open0.7726,closeprice0.774,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:14.09,exittime2023-07-17 10:00:30.68,exitreasonexit_from_read_signal
+SOLUSDT,5m,open28.21,closeprice28.1,dfname2023-07-17_05:00:00,starttime2023-07-17_10:05:10.05,exittime2023-07-17 10:10:11.33,exitreasonexit_from_read_signal
+SOLUSDT,5m,open28.21,closeprice27.94,dfname2023-07-17_05:00:00,starttime2023-07-17_10:05:10.05,exittime2023-07-17 10:16:33.56,exitreasonReason: Stop L-0.93%
+ARBUSDT,5m,open1.3169,closeprice1.328,dfname2023-07-17_05:05:00,starttime2023-07-17_10:10:10.52,exittime2023-07-17 10:20:16.32,exitreasonexit_from_read_signal
+BCHUSDT,5m,open252.8,closeprice252.6,dfname2023-07-17_04:05:00,starttime2023-07-17_09:10:08.97,exittime2023-07-17 10:34:06.04,exitreasonReason: Stop L-0.00%
+BNBUSDT,5m,open242.7,closeprice242.4,dfname2023-07-17_04:10:00,starttime2023-07-17_09:15:10.15,exittime2023-07-17 10:59:32.69,exitreasonReason: Stop L-0.11%
+ARBUSDT,5m,open1.3175,closeprice1.3192,dfname2023-07-17_04:35:00,starttime2023-07-17_09:40:14.48,exittime2023-07-17 10:59:36.83,exitreasonReason: Stop L0.15%
+ARBUSDT,15m,open1.3098,closeprice1.3189,dfname2023-07-17_04:30:00,starttime2023-07-17_09:45:12.90,exittime2023-07-17 11:00:28.66,exitreasonexit_from_read_signal
+ARBUSDT,5m,open1.3169,closeprice1.3176,dfname2023-07-17_05:05:00,starttime2023-07-17_10:10:10.52,exittime2023-07-17 11:00:40.24,exitreasonReason: Stop L0.15%
+WAVESUSDT,5m,open2.015,closeprice2.008,dfname2023-07-17_06:05:00,starttime2023-07-17_11:10:09.92,exittime2023-07-17 11:20:16.12,exitreasonexit_from_read_signal
+AVAXUSDT,5m,open14.47,closeprice14.46,dfname2023-07-17_06:15:00,starttime2023-07-17_11:20:09.77,exittime2023-07-17 11:25:10.59,exitreasonexit_from_read_signal
+SHIBUSDT,5m,open7.96e-06,closeprice7.94e-06,dfname2023-07-17_06:15:00,starttime2023-07-17_11:20:10.63,exittime2023-07-17 11:30:16.86,exitreasonexit_from_read_signal
