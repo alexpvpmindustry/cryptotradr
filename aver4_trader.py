@@ -6,7 +6,8 @@ from glob import glob
 from binance.client import Client
 from binance.exceptions import BinanceAPIException
 
-config = json.load(open("secrets.config","r"))
+with open("secrets.config","r") as f:
+    config = json.load(f)
 bin_api_key=config["bin_api_key"]
 bin_api_secr=config["bin_api_secr"]
 

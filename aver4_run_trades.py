@@ -16,7 +16,8 @@ param_choice = 0
 if len(sys.argv)>1:
     param_choice = int(sys.argv[1])
 
-trade_params = json.load(open("trade_params.json","r"))
+with open("trade_params.json","r") as f:
+    trade_params = json.load(f)
 trade_param = trade_params["ver4"]["params"][param_choice]
 thres_diff = float(trade_param["thres_diff"])
 tickerpair = trade_param["tickerpair"]

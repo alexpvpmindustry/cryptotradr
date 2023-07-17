@@ -10,7 +10,8 @@ import pandas as pd
 from aver4_trader import df_to_dfmpl, get_historical_df, get_klines_live
 
 # loading config and constants
-config = json.load(open("secrets.config","r")) 
+with open("secrets.config","r") as f:
+    config = json.load(f)
 role="<@&1126499478342475807>"
 TZOFFSET=5*60*60 # time zone offset
 
