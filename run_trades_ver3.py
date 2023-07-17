@@ -16,7 +16,7 @@ param_choice_min = 0
 param_choice_max = 1
 if len(sys.argv)>1:
     param_choice_min = int(sys.argv[1])
-    param_choice_min = int(sys.argv[2])
+    param_choice_max = int(sys.argv[2])
     interval_choice = sys.argv[3]
 class signal_object:
     def __init__(self,param_choice):
@@ -114,18 +114,20 @@ class signal_object:
             ping(ERROR_PING2,f"error pc{self.param_choice} {self.tickerpair}{self.interval} {ALEXPING}"+str(e))
             raise
 
-print("starting")
+print("starting",param_choice_min,param_choice_max)
 list_of_signal_objects=[]
 for param_choice in range(param_choice_min,param_choice_max+1):
     s= signal_object(param_choice)
+    print(interval_choice,s.interval)
     if s.interval == interval_choice:
         list_of_signal_objects.append(s)
 #def add_to_schedule(self): # this needs to be fixed
 ddtn=datetime.datetime.now()
 if "m" in interval_choice:
     intvl = int(interval_choice.split("m")[0]); 
-    delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+22) # 22 seconds after 0th min
-    time.sleep(delay)
+    #delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+22) # 22 seconds after 0th min
+    #time.sleep(delay)
+    
     for s in list_of_signal_objects:
         schedule.every(intvl).minutes.at(":03").do(s)
 if len(list_of_signal_objects)>0:

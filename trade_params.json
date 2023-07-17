@@ -64,5 +64,44 @@
         {"id":37,"tickerpair":"SHIBUSDT","interval":"15m","sl":-0.0503,"tp":0.0400,"percentile":85,"thres_diff":0.0006043},
         {"id":38,"tickerpair":"SHIBUSDT","interval":"30m","sl":-0.0922,"tp":0.0565,"percentile":85,"thres_diff":0.0009170}
     ]
+}, "ver4":{
+    "notes":"6_1_0 perc99 buyonly using strat_tpsl1 mapping 001, sl tp = mean+std",
+    "params":[
+        {"id":0,"tickerpair":"SANTOSUSDT","interval":"30m","sl":-0.071368,"tp":0.154626,"percentile":99,"thres_diff":0.0083055},
+        {"id":1,"tickerpair":"XVSUSDT","interval":"30m","sl":-0.103751,"tp":0.129513,"percentile":99,"thres_diff":0.0078033},
+        {"id":2,"tickerpair":"OGUSDT","interval":"30m","sl":-0.0932585,"tp":0.125637,"percentile":99,"thres_diff":0.0086008},
+        {"id":3,"tickerpair":"MATICUSDT","interval":"30m","sl":-0.095129,"tp":0.101577,"percentile":99,"thres_diff":0.0061620},
+        {"id":4,"tickerpair":"KDAUSDT","interval":"30m","sl":-0.0430884,"tp":0.111589,"percentile":99,"thres_diff":0.0049076},
+        {"id":5,"tickerpair":"GMXUSDT","interval":"30m","sl":-0.0389464,"tp":0.0842445,"percentile":99,"thres_diff":0.0046614},
+        {"id":6,"tickerpair":"HFTUSDT","interval":"30m","sl":-0.0606234,"tp":0.112933,"percentile":99,"thres_diff":0.0064855},
+        {"id":7,"tickerpair":"DENTUSDT","interval":"30m","sl":-0.0983809,"tp":0.124214,"percentile":99,"thres_diff":0.0066185},
+        {"id":8,"tickerpair":"HOTUSDT","interval":"30m","sl":-0.094531,"tp":0.0993066,"percentile":99,"thres_diff":0.0062682},
+        {"id":9,"tickerpair":"CTSIUSDT","interval":"30m","sl":-0.0674972,"tp":0.105718,"percentile":99,"thres_diff":0.0071268},
+        {"id":10,"tickerpair":"SHIBUSDT","interval":"30m","sl":-0.109887,"tp":0.111435,"percentile":99,"thres_diff":0.0065290},
+        {"id":11,"tickerpair":"USTCUSDT","interval":"30m","sl":-0.0682441,"tp":0.178642,"percentile":99,"thres_diff":0.0055398},
+        {"id":12,"tickerpair":"DOGEUSDT","interval":"30m","sl":-0.104587,"tp":0.105454,"percentile":99,"thres_diff":0.0061972},
+        {"id":13,"tickerpair":"CELRUSDT","interval":"30m","sl":-0.0783507,"tp":0.125442,"percentile":99,"thres_diff":0.0066994},
+        {"id":14,"tickerpair":"VGXUSDT","interval":"30m","sl":-0.0761498,"tp":0.118176,"percentile":99,"thres_diff":0.0087894},
+        {"id":15,"tickerpair":"KMDUSDT","interval":"30m","sl":-0.0702955,"tp":0.137833,"percentile":99,"thres_diff":0.0063664},
+        {"id":16,"tickerpair":"AXSUSDT","interval":"30m","sl":-0.132166,"tp":0.144866,"percentile":99,"thres_diff":0.0076130},
+        {"id":17,"tickerpair":"FETUSDT","interval":"30m","sl":-0.0708284,"tp":0.0867945,"percentile":99,"thres_diff":0.0067404},
+        {"id":18,"tickerpair":"VTHOUSDT","interval":"30m","sl":-0.119402,"tp":0.11488,"percentile":99,"thres_diff":0.0064722},
+        {"id":19,"tickerpair":"HIGHUSDT","interval":"30m","sl":-0.0657671,"tp":0.105669,"percentile":99,"thres_diff":0.0067239},
+        {"id":20,"tickerpair":"COCOSUSDT","interval":"30m","sl":-0.0810624,"tp":0.119256,"percentile":99,"thres_diff":0.0082391},
+        {"id":21,"tickerpair":"NULSUSDT","interval":"30m","sl":-0.0672573,"tp":0.0914122,"percentile":99,"thres_diff":0.0063183},
+        {"id":22,"tickerpair":"HOOKUSDT","interval":"30m","sl":-0.0509505,"tp":0.104408,"percentile":99,"thres_diff":0.0070397},
+        {"id":23,"tickerpair":"ADAUSDT","interval":"30m","sl":-0.0635643,"tp":0.0784882,"percentile":99,"thres_diff":0.0047580},
+        {"id":24,"tickerpair":"SSVUSDT","interval":"30m","sl":-0.0381725,"tp":0.0925602,"percentile":99,"thres_diff":0.0054899},
+        {"id":25,"tickerpair":"CHRUSDT","interval":"30m","sl":-0.0677499,"tp":0.107767,"percentile":99,"thres_diff":0.0071459},
+        {"id":26,"tickerpair":"CKBUSDT","interval":"30m","sl":-0.0760051,"tp":0.113718,"percentile":99,"thres_diff":0.0063904},
+        {"id":27,"tickerpair":"ANKRUSDT","interval":"30m","sl":-0.0725921,"tp":0.103485,"percentile":99,"thres_diff":0.0067890},
+        {"id":28,"tickerpair":"VETUSDT","interval":"30m","sl":-0.100803,"tp":0.0813606,"percentile":99,"thres_diff":0.0051918},
+        {"id":29,"tickerpair":"DUSKUSDT","interval":"30m","sl":-0.064867,"tp":0.094577,"percentile":99,"thres_diff":0.0069085},
+        {"id":30,"tickerpair":"SLPUSDT","interval":"30m","sl":-0.115028,"tp":0.133061,"percentile":99,"thres_diff":0.0075466},
+        {"id":31,"tickerpair":"FTMUSDT","interval":"30m","sl":-0.115388,"tp":0.103314,"percentile":99,"thres_diff":0.0073619},
+        {"id":32,"tickerpair":"ROSEUSDT","interval":"30m","sl":-0.0622296,"tp":0.0901929,"percentile":99,"thres_diff":0.0064708},
+        {"id":33,"tickerpair":"LRCUSDT","interval":"30m","sl":-0.0854488,"tp":0.0852531,"percentile":99,"thres_diff":0.0068232},
+        {"id":34,"tickerpair":"ORNUSDT","interval":"30m","sl":-0.0843635,"tp":0.0883636,"percentile":99,"thres_diff":0.0060627}
+    ]
 }
 }
