@@ -24,12 +24,15 @@ dfname = sys.argv[3]
 test   = (sys.argv[4]=="TEST")
 closeprice=float(sys.argv[5])
 cur_price = get_current_price(symbol,sell=False)
+
+price_format=".6g"
+
 try:
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         emoji=get_random_emoji()
-        strr=f"{symbol}{interval} pc{param_choice}{emoji}, `{cur_price:.4f}`,\n `{dfname}` (`{datetime.datetime.now()}`)"
+        strr=f"{symbol}{interval} pc{param_choice}{emoji}, `{cur_price:{price_format}}`,\n `{dfname}` (`{datetime.datetime.now()}`)"
         if a1=="FILLED":# we have entered the trade
             ping(CRYPTO_SIGNALS2,f"Entered {strr}")
         elif a1=="INSUFFICIENTBALANCE":
@@ -71,7 +74,7 @@ try:
                 pas_strr = " ".join(update_list[:-1])+" "+pas_strr
             ## end of update routine
             if pas_strr[:2]=="Up": # shifting of SLTP
-                ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:.4f}` "+pas_strr)
+                ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} pc{param_choice}{emoji} `{cur_price:{price_format}}` "+pas_strr)
             if loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
                 stdmean_status=read_signal(symbol,interval)
                 #if stdmean_status != "EXIT":
@@ -80,7 +83,7 @@ try:
                     log_trade_results(symbol,interval,enter_data['price'],cur_price, dfname,ent_time,str(datetime.datetime.now())[:-4],reason="exit_from_read_signal")
                     change = (cur_price-enter_data['price'])/enter_data['price']
                     sign = '⬆️' if change>0 else '⬇️'
-                    strr = f"ExitSignal🪃 {symbol}{interval} {sign}pc{param_choice}{emoji} `{cur_price:.4f}` "
+                    strr = f"ExitSignal🪃 {symbol}{interval} {sign}pc{param_choice}{emoji} `{cur_price:{price_format}}` "
                     strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
                     ping(CRYPTO_LOGS2,strr)
                     stdmean_status_exited=True
@@ -96,8 +99,8 @@ try:
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"Exited {symbol}{interval} {sign}pc{param_choice}{emoji}, `{cur_price:.4f}`,"
-            strr+= f" entered at `{enter_data['price']:.4f}`,\n"
+            strr = f"Exited {symbol}{interval} {sign}pc{param_choice}{emoji}, `{cur_price:{price_format}}`,"
+            strr+= f" entered at `{enter_data['price']:{price_format}}`,\n"
             strr+= f"(`{exittime}`) "
             strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
             reason=""
@@ -115,7 +118,7 @@ try:
             ping(ERROR_PING2,f"EXIT ERROR pc{param_choice}{emoji} {tickerpair}{interval} {ALEXPING}")
             raise
     else:
-        ping(CRYPTO_SIGNALS2,f"Entry price too high, skipping pc{param_choice} trade. {symbol}{interval} curr`{cur_price:.4f}`")
+        ping(CRYPTO_SIGNALS2,f"Entry price too high, skipping pc{param_choice} trade. {symbol}{interval} curr`{cur_price:{price_format}}`")
 except Exception as e:
     ping(ERROR_PING2,f"error pc{param_choice} {tickerpair}{interval} {ALEXPING}"+str(e))
     raise

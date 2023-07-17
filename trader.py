@@ -12,6 +12,7 @@ bin_api_secr=config["bin_api_secr"]
 
 
 base_url = 'https://api.binance.com' 
+price_format=".6g"
 # getting data
 def get_klines_live(symbol, interval='1h', start_time=None, end_time=None, limit=500):
     endpoint = '/api/v3/klines'
@@ -120,12 +121,12 @@ def strat_tpsl1(enter_data,strat_data,cur_price):# only HOLD or SELL
         strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.1
         strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.1
         strat_status = "UpSlow"
-    str1=f"LP `{enter_price*(1+strat_data['cur_sl']):.4f}`,"\
-         f"`{enter_price*(1+strat_data['cur_tp']):.4f}`"
+    str1=f"LP `{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"\
+         f"`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
     str2=f"(`{strat_data['cur_sl']*100:.2f}`,`{strat_data['cur_tp']*100:.2f}`)%"
-    str3=f"\nNext levels: `{(1+strat_data['cur_sl']+width*0.3)*enter_price:.4f}`,"\
-         f"`{(1+strat_data['cur_sl']+width*0.6)*enter_price:.4f}`,"\
-         f"`{(1+strat_data['cur_sl']+width*0.9)*enter_price:.4f}`"
+    str3=f"\nNext levels: `{(1+strat_data['cur_sl']+width*0.3)*enter_price:{price_format}}`,"\
+         f"`{(1+strat_data['cur_sl']+width*0.6)*enter_price:{price_format}}`,"\
+         f"`{(1+strat_data['cur_sl']+width*0.9)*enter_price:{price_format}}`"
     str4=f"(`{(strat_data['cur_sl']+width*0.3)*100:.2f}`,"\
          f"`{(strat_data['cur_sl']+width*0.6)*100:.2f}`,"\
          f"`{(strat_data['cur_sl']+width*0.9)*100:.2f}`)%"
@@ -142,7 +143,7 @@ def price_action_signal(enter_data,strat_data,cur_price):
     else:
         raise NotImplementedError("#todo strat :(")
 def write_signal(ticker,interval,signal,closeprice,dfname):
-    strr = f"{signal},{closeprice},{str(dfname).replace(' ','_')},"
+    strr = f"{signal},{closeprice:{price_format}},{str(dfname).replace(' ','_')},"
     strr+= f"{str(datetime.datetime.now()).replace(' ','_')}\n"
     with open(f"trade_signals/{ticker}{interval}.status","a") as f:
         f.writelines(strr)
@@ -153,7 +154,7 @@ def read_signal(ticker,interval):
     signal=signal_raw[-1].split(",")[0]
     return signal
 def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,reason=""):
-    strr = f"{ticker},{interval},open{openprice},closeprice{closeprice},"
+    strr = f"{ticker},{interval},open{openprice:{price_format}},closeprice{closeprice:{price_format}},"
     strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{reason}\n"
-    with open("trade_logs/results_trades3_16_07_2023.log","a") as f:
+    with open("trade_logs/results_trades4_17_07_2023.log","a") as f:
         f.writelines(strr)

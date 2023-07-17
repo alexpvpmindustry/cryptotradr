@@ -122,7 +122,7 @@ def get_entry_signals(entrys,dfmpl,onlybuy=False):    #get all entry signal
                 entry_signals.append( (entry,buy,dfmpl.iloc[entry].name) )
     return entry_signals
 def parse_signals_and_send_msg(entrys,exits,dfmpl,entry_signals,tickerpair,interval):
-
+    price_format=".6g"
     # check if its new entry
     new_entry=False
     entered=False
@@ -148,7 +148,7 @@ def parse_signals_and_send_msg(entrys,exits,dfmpl,entry_signals,tickerpair,inter
     elif new_entry and not entered: 
         xx = entry_df.Close
         strr = tickerpair+" "+ ("BUY  " if buy==1 else "SELL ")+f"{xx}" 
-        strr += f" tp {xx*(1+0.01*buy):.4f} sl {xx*(1-0.005*buy):.4f}\n"
+        strr += f" tp {xx*(1+0.01*buy):{price_format}} sl {xx*(1-0.005*buy):{price_format}}\n"
         strr += f"{entry_df.name} {role} at {str(datetime.datetime.now())}"
         requests.post(config["crypto-signals2"],data={"content":strr}) 
         entered=True  #print("*"*8,"new entry",entry_time_utc_ms) #klinetime= entry_time_utc_ms-3*3600*1_000

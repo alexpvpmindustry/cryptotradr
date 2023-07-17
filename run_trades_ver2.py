@@ -28,7 +28,7 @@ hl_pairs = None
 
 entered=False
 new_entry=False
-
+price_format=".6g"
 def get_signal(firstRun=False):
     global new_entry, entered,thres_diff,percentile,interval,tickerpair
     correct=False;trys=0
@@ -61,7 +61,7 @@ def get_signal(firstRun=False):
             # ensure that the candlestick is the latest candlestick
             timediff_minutes = ((datetime.datetime.now() - entry_df.name).seconds - TZOFFSET)/60
             intvl = int(interval.split("m")[0])
-            strr = f"new entry pc{param_choice}{tickerpair}{interval}, entrydf.close{entry_df.Close} but checking\n"
+            strr = f"new entry pc{param_choice}{tickerpair}{interval}, entrydf.close{entry_df.Close:{price_format}} but checking\n"
             strr+= f"timediff{timediff_minutes:.2f} intvl {intvl}, current time{datetime.datetime.now()}\n"
             strr+= f"entrydf{entry_df.name}, last few df \n{dfmpl.iloc[-2:]}"
             ping(STATUS_PING2,strr)
@@ -77,14 +77,14 @@ def get_signal(firstRun=False):
     elif not new_entry and entered:
         #print("exit trade now")
         entered=False
-        strr = f"EXIT signal pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close}` "
+        strr = f"EXIT signal pc{param_choice} `{tickerpair}` `{interval}` `{dfmpl.iloc[-1].Close:{price_format}}` "
         strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
         ping(CRYPTO_SIGNALS2,strr)
     elif new_entry and not entered:
         xx = entry_df.Close
         strr = f"pc{param_choice} `{tickerpair}` `{interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
-        strr += f" tp `{xx*(1+tp):.4f}` sl `{xx*(1+sl):.4f}`\n"
+        strr += f" tp `{xx*(1+tp):{price_format}}` sl `{xx*(1+sl):{price_format}}`\n"
         strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
         write_signal(tickerpair,interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
         # execute trading algo
