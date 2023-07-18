@@ -48,7 +48,7 @@ class signal_object:
             correct,dfmpl = validate_dfmpl(dfmpl)
             if not correct:
                 time.sleep(1)
-                print(f"waiting 1 sec for retrypc{self.param_choice}, {self.tickerpair},{self.interval}")
+                print(f"waiting 1 sec for retrypc{self.param_choice},{self.tickerpair}{self.interval}")
             if trys>60:#something might be wrong here,
                 raise Exception(f"pc{self.param_choice}{self.tickerpair}{self.interval} too many tries without getting last candlestick {datetime.datetime.now()}")
             trys+=1

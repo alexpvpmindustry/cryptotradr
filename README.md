@@ -43,3 +43,9 @@ python testimports.py
 
 - find tickerpairs present on MT4 trading platform.
 - optimise parameters for tickerpairs.
+
+## commands
+
+conda activate cryt310
+cd Documents\Github\cryptotradr
+python aver5_run_trades.py 80 120 30m

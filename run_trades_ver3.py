@@ -24,7 +24,8 @@ class signal_object:
         self.interval=None
         self.load_params()
     def load_params(self):
-        self.trade_params = json.load(open("trade_params.json","r"))
+        with open("trade_params.json","r") as f:
+            self.trade_params = json.load(f)
         self.trade_param = self.trade_params["ver2"]["params"][self.param_choice]
         self.thres_diff = float(self.trade_param["thres_diff"])
         self.tickerpair = self.trade_param["tickerpair"]
@@ -35,6 +36,7 @@ class signal_object:
         self.hl_pairs = None
         self.entered=False
         self.new_entry=False
+        self.price_format = ".6g"
 
     def get_signal(self,firstRun=False):
         #global new_entry, entered,thres_diff,percentile,interval,tickerpair
@@ -48,7 +50,7 @@ class signal_object:
             if trys>60:#something might be wrong here,
                 raise Exception(f"pc{self.param_choice}{self.tickerpair}{self.interval} too many tries without getting last candlestick {datetime.datetime.now()}")
             trys+=1
-        entrys,exits,_,_,_,_,_,_,_ = get_entrys_exits(dfmpl,self.percentile,self.thres_diff)
+        entrys,exits,_,_,_,_,_,_,thres_diff = get_entrys_exits(dfmpl,self.percentile,self.thres_diff)
         #get all entry signal
         entry_signals = get_entry_signals(entrys,dfmpl,onlybuy=True) 
         self.new_entry=False
@@ -68,8 +70,12 @@ class signal_object:
                 # ensure that the candlestick is the latest candlestick
                 timediff_minutes = ((datetime.datetime.now() - entry_df.name).seconds - TZOFFSET)/60
                 intvl = int(self.interval.split("m")[0])
-                assert timediff_minutes>intvl # candle should open more than "self.interval" minutes ago
-                if timediff_minutes>intvl*1.5: # next candle should be at least in the first half of the self.interval
+                strr = f"new entry pc{self.param_choice}{self.tickerpair}{self.interval}, entrydf.close{entry_df.Close:{self.price_format}} but checking\n"
+                strr+= f"timediff{timediff_minutes:.2f} intvl {intvl}, current time{datetime.datetime.now()}\n"
+                strr+= f"entrydf{entry_df.name}, last few df \n{dfmpl.iloc[-2:]}"
+                ping(STATUS_PING2,strr)
+                assert timediff_minutes>intvl # candle should open more than "interval" minutes ago
+                if timediff_minutes>intvl*1.5: # next candle should be at least in the first half of the interval
                     self.new_entry=False
                     self.consolelog()
                     return
@@ -80,14 +86,14 @@ class signal_object:
         elif not self.new_entry and self.entered:
             #print("exit trade now")
             self.entered=False
-            strr = f"EXIT signal pc{self.param_choice} `{self.tickerpair}` `{self.interval}` `{dfmpl.iloc[-1].Close}` "
+            strr = f"EXIT signal pc{self.param_choice} `{self.tickerpair}` `{self.interval}` `{dfmpl.iloc[-1].Close:{self.price_format}}` "
             strr+= f"`{dfmpl.iloc[-1].name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
             write_signal(self.tickerpair,self.interval,signal="EXIT",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name) 
             ping(CRYPTO_SIGNALS2,strr)
         elif self.new_entry and not self.entered:
             xx = entry_df.Close
             strr = f"pc{self.param_choice} `{self.tickerpair}` `{self.interval}` "+ ("BUY  " if buy==1 else "SELL ")+f"`{xx}`" 
-            strr += f" tp `{xx*(1+self.tp):.4f}` sl `{xx*(1+self.sl):.4f}`\n"
+            strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}`\n"
             strr += f"`{entry_df.name}` (`{str(datetime.datetime.now())[:-4]}`) {SIGNALROLE}"
             write_signal(self.tickerpair,self.interval,signal="ENTER",closeprice=dfmpl.iloc[-1].Close,dfname=dfmpl.iloc[-1].name)
             # execute trading algo
