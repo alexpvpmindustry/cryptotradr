@@ -48,4 +48,5 @@ python testimports.py
 
 conda activate cryt310
 cd Documents\Github\cryptotradr
+python aver5_run_trades.py 0 40 5m
 python aver5_run_trades.py 80 120 30m

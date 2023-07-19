@@ -24,6 +24,11 @@ class signal_object:
         self.param_choice=param_choice
         self.interval=None
         self.load_params()
+        self.last_ran = int(time.time())
+        self.hl_pairs = None
+        self.entered=False
+        self.new_entry=False
+        self.price_format = ".6g"
     def load_params(self):
         with open("trade_params.json","r") as f:
             self.trade_params = json.load(f)
@@ -34,12 +39,10 @@ class signal_object:
         self.sl = float(self.trade_param["sl"])
         self.tp = float(self.trade_param["tp"])
         self.percentile = float(self.trade_param["percentile"])*0.8
-        self.hl_pairs = None
-        self.entered=False
-        self.new_entry=False
-        self.price_format = ".6g"
+        self.invt= int(self.interval.split("m")[0]); 
 
     def get_signal(self,firstRun=False):
+        self.last_ran = int(time.time())
         #global new_entry, entered,thres_diff,percentile,interval,tickerpair
         correct=False;trys=0
         while not correct:
@@ -74,8 +77,8 @@ class signal_object:
                 intvl = int(self.interval.split("m")[0])
                 strr = f"new entry pc{self.param_choice}{self.tickerpair}{self.interval}, entrydf.close{entry_df.Close:{self.price_format}} but checking\n"
                 strr+= f"timediff{timediff_minutes:.2f} intvl {intvl}, current time{datetime.datetime.now()}\n"
-                strr+= f"entrydf{entry_df.name}, last few df \n{dfmpl.iloc[-2:]}"
-                ping(STATUS_PING2,strr)
+                strr+= f"entrydf{entry_df.name}, last few df \n{dfmpl.iloc[-5:]}"
+                ping(STATUS_PING2,strr) # maybe remove this?
                 assert timediff_minutes>intvl # candle should open more than "interval" minutes ago
                 if timediff_minutes>intvl*1.5: # next candle should be at least in the first half of the interval
                     self.new_entry=False
@@ -106,17 +109,13 @@ class signal_object:
             ping(CRYPTO_SIGNALS2,strr)
             self.entered=True
         else:
-            strr = f"pc{self.param_choice} `{self.tickerpair}` `{self.interval}` at `{dfmpl.iloc[-1].name}`"
-            strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch"
-            time.sleep(1*self.param_choice )
-            ping(STATUS_PING2,strr)
+            pass
         self.consolelog()
     def consolelog(self):
         ddtn=str(datetime.datetime.now())[:-4]
         print(f"last ran:{ddtn},new_e{self.new_entry},entrd{self.entered},pc{self.param_choice}{self.tickerpair}{self.interval}")
     def get_signal_with_warnings(self,firstRun=False):
         try:
-            print(f"within get_signal_with_warnings, pc{self.param_choice} {self.tickerpair}{self.interval}")
             time.sleep( 0.1*self.param_choice ) # delay subsequent calls by 0.1sec
             self.get_signal(firstRun)
         except Exception as e:
@@ -135,7 +134,22 @@ def run_threaded(job_func):
     job_thread = threading.Thread(target=job_func)
     job_thread.start()
 
-#def add_to_schedule(self): # this needs to be fixed
+def ping_if_last_ran():
+    s:signal_object
+    alive_tickers=[]
+    dead_tickers=[]
+    for s in list_of_signal_objects:
+        if (int(time.time()) - s.last_ran) > s.invt*60*3:# 3times of interval
+            dead_tickers.append(s.tickerpair.replace("USDT",""))
+        else:
+            alive_tickers.append(s.tickerpair.replace("USDT",""))
+    alive_tickers_str = ",".join(alive_tickers)
+    dead_tickers_str = ",".join(dead_tickers)
+    strr = f"interval{interval_choice} alive`({len(alive_tickers)}/{len(list_of_signal_objects)})` dead`({len(dead_tickers)}/{len(list_of_signal_objects)})` "
+    strr+= f"(`{str(datetime.datetime.now())[:-4]}`) ftch\n"
+    strr+= f"alive `{alive_tickers_str} `\ndead `{dead_tickers_str} `"
+    ping(STATUS_PING2,strr)
+
 ddtn=datetime.datetime.now()
 if "m" in interval_choice:
     intvl = int(interval_choice.split("m")[0]); 
@@ -144,6 +158,7 @@ if "m" in interval_choice:
     print(f"scheduling for {len(list_of_signal_objects)} tickers")
     for s in list_of_signal_objects:
         schedule.every(intvl).minutes.at(":03").do(run_threaded,s.get_signal_with_warnings)
+    schedule.every(intvl).minutes.at(":04").do(run_threaded,ping_if_last_ran)
 if len(list_of_signal_objects)>0:
     print(f"while loop for {len(list_of_signal_objects)} tickers")
     while True:
