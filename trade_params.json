@@ -140,7 +140,6 @@
         {"id":31,"tickerpair":"AGIXUSDT","interval":"5m","sl":-0.0359031,"tp":0.0503179,"percentile":99,"thres_diff":0.0023848},
         {"id":32,"tickerpair":"HFTUSDT","interval":"5m","sl":-0.0284104,"tp":0.0350261,"percentile":99,"thres_diff":0.0023281},
         {"id":33,"tickerpair":"ONEUSDT","interval":"5m","sl":-0.0303833,"tp":0.0315572,"percentile":99,"thres_diff":0.0017790},
-        {"id":34,"tickerpair":"BTTCUSDT","interval":"5m","sl":-0.0172848,"tp":0.0391561,"percentile":99,"thres_diff":0.0025179},
         {"id":35,"tickerpair":"QNTUSDT","interval":"5m","sl":-0.0170738,"tp":0.0180653,"percentile":99,"thres_diff":0.0011155},
         {"id":36,"tickerpair":"DENTUSDT","interval":"5m","sl":-0.0271792,"tp":0.0246662,"percentile":99,"thres_diff":0.0014360},
         {"id":37,"tickerpair":"IOTAUSDT","interval":"5m","sl":-0.0223273,"tp":0.0265271,"percentile":99,"thres_diff":0.0011647},

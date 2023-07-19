@@ -29,16 +29,16 @@ def mapped(i): # changed this
 def now_ms():
     return int(time.time()*1_000)
 
-def get_data(tickerpair,interval,limit=1000,type="live"):
+def get_data(tickerpair,interval,limit=1000,type="live",start_time=None):
     """limit==0 for no limit
     type: live,sampledata,data
     """
     if type=="live":
-        klines = get_klines_live(tickerpair,interval,limit=limit)
+        klines = get_klines_live(tickerpair,interval,limit=limit,start_time=start_time)
         trys=0
         while ((klines is None) or (len(klines)==0)):
             time.sleep(20)
-            klines = get_klines_live(tickerpair,interval,limit=limit)
+            klines = get_klines_live(tickerpair,interval,limit=limit,start_time=start_time)
             trys+=1
             if trys>3*10:
                 raise ValueError(f"unable to get klines for {tickerpair}{interval}")
