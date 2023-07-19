@@ -33,7 +33,7 @@ class signal_object:
         self.interval = self.trade_param["interval"]
         self.sl = float(self.trade_param["sl"])
         self.tp = float(self.trade_param["tp"])
-        self.percentile = float(self.trade_param["percentile"])*0.9
+        self.percentile = float(self.trade_param["percentile"])*0.8
         self.hl_pairs = None
         self.entered=False
         self.new_entry=False
