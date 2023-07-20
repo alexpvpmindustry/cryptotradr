@@ -41,6 +41,7 @@ python testimports.py
 
 ## non-urgent todos
 
+- get_data to return more live data then just 1000
 - find tickerpairs present on MT4 trading platform.
 - optimise parameters for tickerpairs.
 
