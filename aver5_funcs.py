@@ -29,7 +29,7 @@ def mapped(i): # changed this
 def now_ms():
     return int(time.time()*1_000)
 
-def get_data(tickerpair,interval,limit=1000,type="live",start_time=None):
+def get_data(tickerpair,interval,limit=1000,type="live",start_time=None,offset=3600*3*1e3):
     """limit==0 for no limit
     type: live,sampledata,data
     """
@@ -42,7 +42,7 @@ def get_data(tickerpair,interval,limit=1000,type="live",start_time=None):
             trys+=1
             if trys>3*10:
                 raise ValueError(f"unable to get klines for {tickerpair}{interval}")
-        dfmpl = df_to_dfmpl(pd.DataFrame(klines))#.iloc[:-1]# skips the last tick which is incomplete
+        dfmpl = df_to_dfmpl(pd.DataFrame(klines),offset=offset)#.iloc[:-1]# skips the last tick which is incomplete
     elif type=="sampledata":
         df = get_historical_df(tickerpair,interval,folder="kline_data_sample").iloc[-limit:]
         dfmpl = df_to_dfmpl(df)
