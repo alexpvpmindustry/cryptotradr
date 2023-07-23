@@ -26,11 +26,13 @@ python testimports.py
 
 ## todos
 
-- fix entry for times when entry was before initialisation
-- rewrite `run_trades_ver2.py` to scale up to ~750 ticker/interval pairs per 5 minutes
-- fix run_trades_ver2, dont Upslow on initial run?
-- reduce status calls to discord ping.
+- fix entry for times when entry was before initialisation ( need to check )
+- look for tickers at 5m interval with more than 9% (to 6%) change. next ticks might be high.
+    - see STMXUSDT at 2023/7/23 12:30
 
+- ✅ rewrite `run_trades_ver2.py` to scale up to ~750 ticker/interval pairs per 5 minutes
+- ✅ fix run_trades_ver2, dont Upslow on initial run?
+- ✅ reduce status calls to discord ping.
 - ✅ limit number of positions? using binanceexceptions
 - ✅ some code to validate the timing of prev candlestick
 - ✅ a script to start/restart all runs
