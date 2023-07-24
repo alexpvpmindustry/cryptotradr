@@ -53,8 +53,7 @@ class signal_object:
         if idd in [0,len(subset_symbols)-1]:
             self.consolelog(f"1> fetch temp data{idd}")
     def argsort_data(self):
-        hr24change = [(dfmpl_after.Close.values-dfmpl_befor.Close.values)/dfmpl_befor.Close.values for 
-                      dfmpl_befor, dfmpl_after in zip(self.fetched_24hr_data,self.fetched_fresh_all_data)]
+        hr24change = [(df_aft.Close.values-df_bef.Close.values)/df_bef.Close.values for df_bef, df_aft in zip(self.fetched_24hr_data,self.fetched_fresh_all_data)]
         hr24change = np.asarray(hr24change)
         self.argsorted_data = np.argsort(-hr24change,axis=0) # the last row is the new incomplete data
         self.top10symbols_prev = self.argsorted_data[:10,1] # previous order
