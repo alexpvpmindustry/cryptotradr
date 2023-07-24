@@ -35,20 +35,21 @@ class signal_object:
         self.subset_symbols=subset_symbols
         self.top10symbols_prev=None
         self.top10symbols_temp=None
-        self.testing=False
+        self.firstrun=False
     def fetch_24hr_data(self,idd): # do this every 1 to 4 th minute
-        if not self.testing:
-            time.sleep(0.15*idd+60+60)
+        time.sleep(0.15*idd)
+        if not self.firstrun:
+            time.sleep(2*60) # TODO fix this :(
         start_time = get_time_before(15)#24*60)
         df0 = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time-3600_000*24,offset=self.offset)
         self.fetched_24hr_data[idd]=df0.copy()
         self.fetched_24hr_data_sync[idd]+=1
         if idd in [0,len(subset_symbols)-1]:
             self.consolelog(f"0> fetch 24hr data{idd}")
-    def fetch_new_data(self,idd): # do this every 4:10 th minute 
-        if not self.testing:
-            time.sleep(20+2*60+60+60) # TODO fix this :(
-            time.sleep(0.05*idd) 
+    def fetch_new_data(self,idd): # do this every 4:10 th minute
+        time.sleep(0.05*idd) 
+        if not self.firstrun:
+            time.sleep(20+4*60) # TODO fix this :(
         start_time = get_time_before(15)#24*60)
         df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
@@ -83,6 +84,7 @@ class signal_object:
         criteria_passed = False
         criteria_str = ""
         symbol = self.subset_symbols[self.top10symbols_temp[0]]
+        self.top10current = [subset_symbols[iii] for iii in self.top10symbols_temp[:10]]
         if not self.top10symbols_prev[0]==self.top10symbols_temp[0]:
             # check for criteria, and then enter position
             argmax = self.top10symbols_temp[0]
@@ -106,7 +108,8 @@ class signal_object:
             ping(CRYPTO_SIGNALS2,strr)
         else:# no change in top position, wait for next iteration
             synced = self.checksync()
-            ping(STATUS_PING2,f"running {self.ddtn_str()}, sync{synced}")
+            top10current = ",".join(self.top10current)
+            ping(STATUS_PING2,f"running {self.ddtn_str()}, sync{synced}, curr top symbols {top10current}")
         self.consolelog("fin signals")
     def enter_position(self,symbol,closeprice,dfname):
         xx = closeprice
@@ -127,8 +130,9 @@ class signal_object:
     def get_signal_with_warnings(self):# execute this at :55 seconds
         # started at 1:50 seconds
         try:
-            self.consolelog(f"2> sleeping for signal,{3*60+5+60+60}secs")
-            time.sleep(3*60+5+60+60) # this is more than 5mins to skip the first one, this works normally afterwards
+            if not self.firstrun:
+                self.consolelog(f"2> sleeping for signal,{3*60+5+60+60}secs")
+                time.sleep(3*60+5+60+60) # this is more than 5mins to skip the first one, this works normally afterwards
             self.get_signal()
         except Exception as e:
             ping(ERROR_PING2,f"error {ALEXPING}"+str(e))
@@ -162,6 +166,11 @@ if delay > 5*60:
 # assert False
 ## end temp
 print(f"waiting for {delay} secs")
+# if delay is more than ~120seconds, 
+# set firstrun True
+# run the 2 data functions then argsort
+# then set firstrun False
+# then wait to apply new schedule.
 time.sleep(delay)
 print(f"scheduling at {datetime.datetime.now()}")
 for idd in range(len( subset_symbols )):
