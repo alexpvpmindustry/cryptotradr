@@ -26,6 +26,8 @@ python testimports.py
 
 ## todos
 
+
+
 - fix entry for times when entry was before initialisation ( need to check )
 - look for tickers at 5m interval with more than 9% (to 6%) change. next ticks might be high.
     - see STMXUSDT at 2023/7/23 12:30
@@ -51,5 +53,8 @@ python testimports.py
 
 conda activate cryt310
 cd Documents\Github\cryptotradr
+python aver6_run_trades.py
+
+
 python aver5_run_trades.py 0 40 5m
 python aver5_run_trades.py 80 120 30m
