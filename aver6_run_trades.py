@@ -35,19 +35,22 @@ class signal_object:
         self.subset_symbols=subset_symbols
         self.top10symbols_prev=None
         self.top10symbols_temp=None
-    def fetch_24hr_data(self,idd): # do this every 1 to 4 th minute 
-        time.sleep(0.15*idd+60+60)
+        self.testing=False
+    def fetch_24hr_data(self,idd): # do this every 1 to 4 th minute
+        if not self.testing:
+            time.sleep(0.15*idd+60+60)
         start_time = get_time_before(15)#24*60)
-        df0 = get_data(subset_symbols[0]+"USDT","5m",limit=3,start_time=start_time-3600_000*24,offset=self.offset)
+        df0 = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time-3600_000*24,offset=self.offset)
         self.fetched_24hr_data[idd]=df0.copy()
         self.fetched_24hr_data_sync[idd]+=1
         if idd in [0,len(subset_symbols)-1]:
             self.consolelog(f"0> fetch 24hr data{idd}")
     def fetch_new_data(self,idd): # do this every 4:10 th minute 
-        time.sleep(20+2*60+60+60) # TODO fix this :(
-        time.sleep(0.05*idd) 
+        if not self.testing:
+            time.sleep(20+2*60+60+60) # TODO fix this :(
+            time.sleep(0.05*idd) 
         start_time = get_time_before(15)#24*60)
-        df = get_data(subset_symbols[0]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
+        df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
         self.fetched_fresh_all_data_sync[idd]+=1
         if idd in [0,len(subset_symbols)-1]:
@@ -70,7 +73,7 @@ class signal_object:
     def get_signal(self):# execute this at 4:56 th minute
         self.last_ran = int(time.time())
         self.argsort_data()
-        with open("trade_logs/data_logging_24_7_2923.log","a") as f:
+        with open("trade_logs/data_logging_24_7_2023.log","a") as f:
             strr ="argsorted_data,"+self.ddtn_str()+"\n"
             strr+="_".join([ ",".join([ str(aa) for aa in a]) for a in self.argsorted_data]) + "\n"
             f.writelines( [strr] )
