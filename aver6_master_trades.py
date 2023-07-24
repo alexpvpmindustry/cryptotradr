@@ -2,7 +2,7 @@ import datetime,time,sys
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results 
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
  
-symbol = int(sys.argv[1])+"USDT"
+symbol = sys.argv[1]+"USDT"
 qtyUSD = float(sys.argv[2])
 dfname = sys.argv[3]
 test   = sys.argv[4]=="TEST"
