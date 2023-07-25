@@ -7,18 +7,27 @@ qtyUSD = float(sys.argv[2])
 dfname = sys.argv[3]
 test   = sys.argv[4]=="TEST"
 closeprice=float(sys.argv[5])
+criteria_gain=float(sys.argv[6])
+criteria_pullback=float(sys.argv[7])
+
 cur_price = get_current_price(symbol,sell=False)
 price_format=".6g"
 sl=-0.02
 tp=0.048
 hl_pairs=None
 interval="5m"
+passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
+passed="critPASS" if passed_criteria else "critFAIL"
+critStr = f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
+buytimestr=""
 try:
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         emoji=get_random_emoji()
-        strr=f"{symbol}{emoji}, `{cur_price:{price_format}}`,\n `{dfname}` (`{datetime.datetime.now()}`)"
+        strr =f"{symbol}{emoji}, `{cur_price:{price_format}}` {critStr}"
+        buytimestr=str(datetime.datetime.now())[:-4]
+        strr+=f"\n `{dfname}` (`{buytimestr}`)"
         if a1=="FILLED":# we have entered the trade
             ping(CRYPTO_SIGNALS2,f"Entered {strr}")
         elif a1=="INSUFFICIENTBALANCE":
@@ -61,7 +70,7 @@ try:
             ## end of update routine
             if pas_strr[:2]=="Up": # shifting of SLTP
                 ping(CRYPTO_SIGNALS2,pas_status+f" {symbol}{interval} {emoji} `{cur_price:{price_format}}` "+pas_strr)
-            if loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
+            if False and loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
                 stdmean_status=read_signal(symbol,interval)
                 #if stdmean_status != "EXIT":
                 #    stdmean_status = "HOLD"
@@ -86,9 +95,10 @@ try:
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
             strr = f"Exited {symbol}{interval} {sign}{emoji}, `{cur_price:{price_format}}`,"
-            strr+= f" entered at `{enter_data['price']:{price_format}}`,\n"
+            strr+= f" entered at `{enter_data['price']:{price_format}}`, `{buytimestr}`,\n"
             strr+= f"(`{exittime}`) "
             strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
+            strr+= f"{critStr}\n"
             reason=""
             if pas_status=="SELL":
                 strr+= f"Reason: {pas_strr}\n"

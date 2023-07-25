@@ -43,6 +43,11 @@ python testimports.py
 - ✅ update historical data to recent months
 - ✅ report reason for exit, either TP,SL,Exitsignal
 
+## idea todos
+- from 9_0_5
+- do predictions for top 10 tickers at 5m resolution
+- then use hourly/30m-ly 24hr change to find datasets to validate this analysis/prediction
+
 ## non-urgent todos
 
 - get_data to return more live data then just 1000

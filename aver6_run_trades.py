@@ -49,7 +49,7 @@ class signal_object:
     def fetch_new_data(self,idd): # do this every 4:10 th minute
         time.sleep(0.05*idd) 
         if not self.firstrun:
-            time.sleep(20+4*60) # TODO fix this :(
+            time.sleep(20+4*60+15) # TODO fix this :(
         start_time = get_time_before(15)#24*60)
         df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
@@ -91,13 +91,13 @@ class signal_object:
             df=self.fetched_fresh_all_data[argmax]
             loc0=2
             gain=(df.iloc[loc0].Close-df.iloc[loc0].Open)/df.iloc[loc0].Open
-            if gain>=0.03:
+            if gain>=0.005: # was 0.03
                 pullback = (df.iloc[loc0].High - df.iloc[loc0].Close)/(df.iloc[loc0].High - df.iloc[loc0].Open)
                 criteria_str =f",pb{pullback:.2%}."
-                if pullback <=0.3:
+                if pullback <=0.5: # was 0.3
                     criteria_passed=True
             if criteria_passed:
-                  self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name)
+                  self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback)
                   self.entered=True
                   ping(CRYPTO_SIGNALS2,f"ENTER {symbol} {df.iloc[loc0].Close:{self.price_format}} {self.ddtn_str()}")
                   return
@@ -111,7 +111,7 @@ class signal_object:
             top10current = ",".join(self.top10current)
             ping(STATUS_PING2,f"running {self.ddtn_str()}, sync{synced}, curr top symbols {top10current}")
         self.consolelog("fin signals")
-    def enter_position(self,symbol,closeprice,dfname):
+    def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback):
         xx = closeprice
         strr = f"`{symbol}` BUY `{xx}`" 
         strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}`\n"
@@ -119,7 +119,7 @@ class signal_object:
         write_signal(symbol,self.interval,signal="ENTER",closeprice=xx,dfname=dfname)
         # execute trading algo
         enterdftime = str(dfname).replace(" ","_")
-        cmd = ["python","aver6_master_trades.py",symbol,"15",f"{enterdftime}","TEST",f"{xx:{self.price_format}}"]
+        cmd = ["python","aver6_master_trades.py",symbol,"15",f"{enterdftime}","TEST",f"{xx:{self.price_format}}",f"{criteria_gain:.4f}",f"{criteria_pullback:.4f}"]
         cmd = " ".join(cmd)
         subprocess.Popen( cmd , shell=True)
         ping(CRYPTO_SIGNALS2,strr)
