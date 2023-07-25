@@ -1,26 +1,26 @@
 import datetime,time,sys
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results 
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
- 
-symbol = sys.argv[1]+"USDT"
-qtyUSD = float(sys.argv[2])
-dfname = sys.argv[3]
-test   = sys.argv[4]=="TEST"
-closeprice=float(sys.argv[5])
-criteria_gain=float(sys.argv[6])
-criteria_pullback=float(sys.argv[7])
-
-cur_price = get_current_price(symbol,sell=False)
-price_format=".6g"
-sl=-0.02
-tp=0.048
-hl_pairs=None
-interval="5m"
-passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
-passed="critPASS" if passed_criteria else "critFAIL"
-critStr = f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
-buytimestr=""
 try:
+    symbol = sys.argv[1]+"USDT"
+    qtyUSD = float(sys.argv[2])
+    dfname = sys.argv[3]
+    test   = sys.argv[4]=="TEST"
+    closeprice=float(sys.argv[5])
+    criteria_gain=float(sys.argv[6])
+    criteria_pullback=float(sys.argv[7])
+
+    cur_price = get_current_price(symbol,sell=False)
+    price_format=".6g"
+    sl=-0.02
+    tp=0.048
+    hl_pairs=None
+    interval="5m"
+    passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
+    passed="critPASS" if passed_criteria else "critFAIL"
+    critStr = f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
+    buytimestr=""
+
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
