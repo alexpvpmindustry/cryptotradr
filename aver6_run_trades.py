@@ -49,7 +49,7 @@ class signal_object:
     def fetch_new_data(self,idd): # do this every 4:10 th minute
         time.sleep(0.05*idd) 
         if not self.firstrun:
-            time.sleep(20+4*60+15) # TODO fix this :(
+            time.sleep(20+4*60+15+8) # TODO fix this :(
         start_time = get_time_before(15)#24*60)
         df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
