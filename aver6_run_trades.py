@@ -36,6 +36,7 @@ class signal_object:
         self.top10symbols_prev=None
         self.top10symbols_temp=None
         self.firstrun=False
+        self.pos_number=0
     def fetch_24hr_data(self,idd): # do this every 1 to 4 th minute
         time.sleep(0.15*idd)
         if not self.firstrun:
@@ -81,37 +82,56 @@ class signal_object:
             self.consolelog("2> get_signal writelines")
         #print(self.fetched_24hr_data)
         #print(self.fetched_fresh_all_data)
-        criteria_passed = False
-        criteria_str = ""
-        symbol = self.subset_symbols[self.top10symbols_temp[0]]
-        self.top10current = [subset_symbols[iii] for iii in self.top10symbols_temp[:10]]
+
+        self.top10current = [subset_symbols[iii] for iii in self.top10symbols_temp[:10]] 
+        opened_pos = False
+        symbol_id = self.top10symbols_temp[0]
         if not self.top10symbols_prev[0]==self.top10symbols_temp[0]:
             # check for criteria, and then enter position
-            argmax = self.top10symbols_temp[0]
-            df=self.fetched_fresh_all_data[argmax]
-            loc0=2
-            gain=(df.iloc[loc0].Close-df.iloc[loc0].Open)/df.iloc[loc0].Open
-            if gain>=0.005: # was 0.03
-                pullback = (df.iloc[loc0].High - df.iloc[loc0].Close)/(df.iloc[loc0].High - df.iloc[loc0].Open)
-                criteria_str =f",pb{pullback:.2%}."
-                if pullback <=0.5: # was 0.3
-                    criteria_passed=True
-            if criteria_passed:
-                  self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback)
-                  self.entered=True
-                  ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
-                  return
-            else:
-                criteria_str= f"gain{gain:.2%}"+criteria_str
-            # did not pass criteria, wait for next iteration
-            strr=f"prev {self.subset_symbols[self.top10symbols_prev[0]]},curr {symbol},failed criteria, {criteria_str}"
-            ping(CRYPTO_SIGNALS2,strr)
-        else:# no change in top position, wait for next iteration
+            pos_change=10
+            if symbol_id in self.top10symbols_prev:
+                pos_change = self.top10symbols_prev.index(symbol_id)-currpos
+            opened_pos = self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
+        # check for other possible opening for positions
+        for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
+            if currpos==0: continue 
+            pos_change=10
+            if currsymbol in self.top10symbols_prev:
+                pos_change = self.top10symbols_prev.index(currsymbol)-currpos
+            if pos_change>1: # jumps by at least 2 positions
+                opened_pos = opened_pos or self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
+        if not opened_pos:# no change in top position, wait for next iteration
             synced = self.checksync()
             top10current = ",".join(self.top10current)
             ping(STATUS_PING2,f"running {self.ddtn_str()}, sync{synced}, curr top symbols {top10current}")
         self.consolelog("fin signals")
-    def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback):
+
+    def checkCriteria_then_openPos(self, symbol_id,pos_type):
+        criteria_passed = False
+        criteria_str = ""
+        symbol = self.subset_symbols[symbol_id]
+        df=self.fetched_fresh_all_data[symbol_id]
+        loc0=2
+        gain=(df.iloc[loc0].Close-df.iloc[loc0].Open)/df.iloc[loc0].Open
+        if gain>=0.005: # was 0.03
+            pullback = (df.iloc[loc0].High - df.iloc[loc0].Close)/(df.iloc[loc0].High - df.iloc[loc0].Open)
+            criteria_str =f",pb{pullback:.2%}."
+            if pullback <=0.5: # was 0.3
+                criteria_passed=True
+        if criteria_passed: 
+              self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback,pos_type)
+              ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
+              opened_pos=True
+        else: # did not pass criteria
+            criteria_str= f"gain{gain:.2%}"+criteria_str
+            strr=""
+            if pos_type[:4]=="TopP":
+                strr=f"{pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
+            if pos_type[:4]=="JUMP":
+                strr=f"{pos_type} ,critFail,{criteria_str}"
+            ping(CRYPTO_SIGNALS2,strr)
+        return opened_pos
+    def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback,pos_type):
         xx = closeprice
         strr = f"`{symbol}` BUY `{xx}`" 
         strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}`\n"
@@ -119,9 +139,11 @@ class signal_object:
         write_signal(symbol,self.interval,signal="ENTER",closeprice=xx,dfname=dfname)
         # execute trading algo
         enterdftime = str(dfname).replace(" ","_")
-        cmd = ["python","aver6_master_trades.py",symbol,"15",f"{enterdftime}","TEST",f"{xx:{self.price_format}}",f"{criteria_gain:.4f}",f"{criteria_pullback:.4f}"]
+        cmd = ["python","aver6_master_trades.py",symbol,"15",f"{enterdftime}","TEST",f"{xx:{self.price_format}}",f"{criteria_gain:.4f}",
+               f"{criteria_pullback:.4f}",f"{pos_type}",f"{self.pos_number}"]
         cmd = " ".join(cmd)
         subprocess.Popen( cmd , shell=True)
+        self.pos_number+=1
         ping(CRYPTO_SIGNALS2,strr)
     def consolelog(self,strr=""): 
         print(f"{self.ddtn_str()}, {strr}") 

@@ -13,7 +13,8 @@ try:
     closeprice=float(sys.argv[5])
     criteria_gain=float(sys.argv[6])
     criteria_pullback=float(sys.argv[7])
-
+    pos_type = sys.argv[8]
+    pos_number = int(sys.argv[9])
     cur_price = get_current_price(symbol,sell=False)
     price_format=".6g"
     sl=-0.02
@@ -29,7 +30,7 @@ try:
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         emoji=get_random_emoji()
-        strr =f"`{symbol}{emoji}`, `{cur_price:{price_format}}` {critStr}"
+        strr =f"`{symbol}{emoji}`, `{cur_price:{price_format}}` {pos_type} `Trd{pos_number}` {critStr}"
         buytimestr=str(datetime.datetime.now())[:-4]
         strr+=f"\n `{dfname}` (`{buytimestr}`)"
         if a1=="FILLED":# we have entered the trade
@@ -74,20 +75,7 @@ try:
             #     pas_strr = " ".join(update_list[:-1])+" "+pas_strr
             ## end of update routine
             if pas_strr[:2]=="Up": # shifting of SLTP
-                ping(CRYPTO_SIGNALS2,pas_status+f" `{symbol}{interval}` {emoji} `{cur_price:{price_format}}` "+pas_strr)
-            if False and loopcounts%6==0 and not stdmean_status_exited:# read exit status (remove the False and for effect)
-                stdmean_status=read_signal(symbol,interval)
-                #if stdmean_status != "EXIT":
-                #    stdmean_status = "HOLD"
-                if stdmean_status == "EXIT": #checks if we are exiting becos of signal
-                    log_trade_results(symbol,interval,enter_data['price'],cur_price, dfname,ent_time,str(datetime.datetime.now())[:-4],reason="exit_from_read_signal")
-                    change = (cur_price-enter_data['price'])/enter_data['price']
-                    sign = '⬆️' if change>0 else '⬇️'
-                    strr = f"Exit🪃Signal {symbol}{interval} {sign}{emoji} `{cur_price:{price_format}}` "
-                    strr+= f"size=`${qtyUSD}` (`{change*100:.2f}%`, `{qtyUSD*change:.2f}$`)\n"
-                    ping(CRYPTO_LOGS2,strr)
-                    stdmean_status_exited=True
-                stdmean_status = "HOLD" # reset this signal since we are not using it.
+                ping(CRYPTO_SIGNALS2,pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` `{cur_price:{price_format}}` "+pas_strr)
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
             if status=="HOLD":
@@ -100,7 +88,7 @@ try:
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"Exited `{symbol}{interval}` {sign}{emoji}, `{cur_price:{price_format}}`,"
+            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}` `{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, `{buytimestr}`,\n"
             strr+= f"(`{exittime}`) "
             strr+= f"size=`${qtyUSD}` (RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`)\n"
