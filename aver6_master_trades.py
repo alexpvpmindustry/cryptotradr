@@ -88,9 +88,9 @@ try:
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}` `{cur_price:{price_format}}`,"
-            strr+= f" entered at `{enter_data['price']:{price_format}}`, `{buytimestr}`,\n"
-            strr+= f"(`{exittime}`) "
+            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPrice`{cur_price:{price_format}}`,"
+            strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
+            strr+= f"(ExitTime`{exittime}`) "
             strr+= f"size=`${qtyUSD}` (RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`)\n"
             strr+= f"{critStr}\n"
             reason=""
