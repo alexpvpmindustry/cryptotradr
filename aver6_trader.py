@@ -187,5 +187,5 @@ def read_signal(ticker,interval):
 def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,reason=""):
     strr = f"{ticker},{interval},open{openprice:{price_format}},closeprice{closeprice:{price_format}},"
     strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{reason}\n"
-    with open("trade_logs/results_trades8_26_07_2023.log","a") as f:
+    with open("trade_logs/results_trades9_27_07_2023.log","a") as f:
         f.writelines(strr)

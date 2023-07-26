@@ -111,10 +111,10 @@ class signal_object:
                 pos_change = np.where(self.top10symbols_prev==currsymbol)[0]-currpos
             if pos_change>1: # jumps by at least 2 positions
                 opened_pos = opened_pos or self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
-        if not opened_pos:# no change in top position, wait for next iteration
-            synced = self.checksync()
-            top10current = ",".join(self.top10current)
-            ping(STATUS_PING2,f"running {self.ddtn_str()}, sync{synced}, curr top symbols {top10current}")
+        #if not opened_pos:# no change in top position, wait for next iteration
+        synced = self.checksync()
+        top10current = ",".join(self.top10current)
+        ping(STATUS_PING2,f"{self.ddtn_str()},sync{synced},TOPsym {top10current} ,opos={opened_pos}")
         self.consolelog("fin signals")
 
     def checkCriteria_then_openPos(self, symbol_id,pos_type):
@@ -209,7 +209,7 @@ def first_run(): #TODO make the logic for firstrun
     run_threaded_no_data(s.get_signal_with_warnings) 
 min_delay = 60+35
 if delay>min_delay:
-    print(f"first delay is very long, so do a run first, waiting for {delay-min_delay} secs")
+    print(f"first delay is very long, so do a run first, waiting for {delay-min_delay} secs , {datetime.datetime.now()}")
     # delay is very long, so do a run first.......
     time.sleep(delay-min_delay)
     # time now should be at 4:00
@@ -218,7 +218,7 @@ if delay>min_delay:
     first_run()
     print(f"done threaded first run, {datetime.datetime.now()}")
     delay=min_delay
-print(f"waiting for {delay} secs")
+print(f"waiting for {delay} secs, {datetime.datetime.now()}")
 time.sleep(delay)
 # now we are at X:35 minutes where X is a multiple of 5
 s.firstrun=False
@@ -229,6 +229,7 @@ for idd in range(len( subset_symbols )):
     schedule.every(intvl).minutes.at(":50").do(run_threaded,s.fetch_new_data,idd)
 schedule.every(intvl).minutes.at(":50").do(run_threaded_no_data,s.get_signal_with_warnings)
 print(f"scheduled algos {datetime.datetime.now()}")
+# sleep for 3min and 24 seconds to make another data run......
 while True:
     schedule.run_pending()
     time.sleep(1)
