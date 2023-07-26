@@ -99,7 +99,7 @@ class signal_object:
             if criteria_passed:
                   self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback)
                   self.entered=True
-                  ping(CRYPTO_SIGNALS2,f"ENTER {symbol} {df.iloc[loc0].Close:{self.price_format}} {self.ddtn_str()}")
+                  ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
                   return
             else:
                 criteria_str= f"gain{gain:.2%}"+criteria_str

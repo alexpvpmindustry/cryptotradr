@@ -133,6 +133,34 @@ def strat_tpsl1(enter_data,strat_data,cur_price):# only HOLD or SELL
          f"`{(strat_data['cur_sl']+width*0.9)*100:.2f}`)%"
     str5=f"width={width*100:.2f}%"
     return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
+def strat_tpsl2(enter_data,strat_data,cur_price):# only HOLD or SELL
+    # strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl1"}
+    enter_price = enter_data["price"]
+    if cur_price < ((1+strat_data["cur_sl"])*enter_price ): 
+        return "SELL",strat_data,f"StopLoss{strat_data['cur_sl']:.2%}"
+    elif cur_price > ((1+strat_data["cur_tp"])*enter_price ): 
+        return "SELL",strat_data,f"TakeProf{strat_data['cur_tp']:.2%}"
+    # strats to shrink tp and sl
+    width=enter_data["tp"]-enter_data["sl"] # 4%, +-2%
+    #print("width",width)
+    strat_status="In SLTP"
+
+    if (not strat_data["shiftSureProfit"]) and (cur_price > ( 1.01*enter_price )): # if more than 1% gain from enterprice, move sltp
+        strat_status = "Up1%StopLoss"
+        strat_data["cur_sl"] = 0.005
+        strat_data["cur_tp"] = 0.045
+        strat_data["shiftSureProfit"]=True
+    elif cur_price > ( (1+strat_data["cur_sl"]+width*0.55)*enter_price ): # shifts up by 0.55*4%-2% =0.2% from center point
+        strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.06 # increases 0.24% = 4%*0.06
+        strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.06 # increases 0.24% = 4%*0.06
+        strat_status = "UpSlow"
+    str1=f"SLTP `{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"\
+         f"`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
+    str2=f"(`{strat_data['cur_sl']:.2%}`,`{(cur_price-enter_price)/enter_price:.2%}`,`{strat_data['cur_tp']:.2%}`)"
+    str3=f"\nNext levels: `{(1+strat_data['cur_sl']+width*0.06)*enter_price:{price_format}}`,"
+    str4=f"(`{(strat_data['cur_sl']+width*0.06):.2%}`)" 
+    str5=f"width={width:.2%}"
+    return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
 def price_action_signal(enter_data,strat_data,cur_price):
     # enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
     #          "hl_pairs":hl_pairs,"strat":"strat_tpsl1"}
@@ -141,6 +169,8 @@ def price_action_signal(enter_data,strat_data,cur_price):
         pass
     elif enter_data["strat"]=="strat_tpsl1":
         return strat_tpsl1(enter_data,strat_data,cur_price)
+    elif enter_data["strat"]=="strat_tpsl2":
+        return strat_tpsl2(enter_data,strat_data,cur_price)
     else:
         raise NotImplementedError("#todo strat :(")
 def write_signal(ticker,interval,signal,closeprice,dfname):
