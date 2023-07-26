@@ -47,7 +47,7 @@ try:
 
         ent_time=str(datetime.datetime.now())[:-4].replace(" ","_")
         enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
-                    "hl_pairs":hl_pairs,"strat":"strat_tpsl1"}
+                    "hl_pairs":hl_pairs,"strat":"strat_tpsl2"}
         strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,
                       "strat":"strat_tpsl2","shiftSureProfit":False}
 
