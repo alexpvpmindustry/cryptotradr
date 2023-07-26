@@ -122,6 +122,7 @@ class signal_object:
         criteria_str = ""
         symbol = self.subset_symbols[symbol_id]
         df=self.fetched_fresh_all_data[symbol_id]
+        opened_pos=False
         loc0=2
         gain=(df.iloc[loc0].Close-df.iloc[loc0].Open)/df.iloc[loc0].Open
         if gain>=0.005: # was 0.03
@@ -130,16 +131,16 @@ class signal_object:
             if pullback <=0.5: # was 0.3
                 criteria_passed=True
         if criteria_passed: 
-              self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback,pos_type)
-              ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
-              opened_pos=True
+            self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback,pos_type)
+            ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
+            opened_pos=True
         else: # did not pass criteria
             criteria_str= f"gain{gain:.2%}"+criteria_str
             strr=""
             if pos_type[:4]=="TopP":
-                strr=f"{pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
+                strr=f"Signal failed: {pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
             if pos_type[:4]=="JUMP":
-                strr=f"{pos_type} ,critFail,{criteria_str}"
+                strr=f"Signal failed: {pos_type} ,critFail,{criteria_str}"
             ping(CRYPTO_SIGNALS2,strr)
         return opened_pos
     def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback,pos_type):
