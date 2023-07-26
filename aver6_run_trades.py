@@ -58,7 +58,7 @@ class signal_object:
         if not self.firstrun:
             time.sleep( 4*60+43)
         else:
-            time.sleep(17)
+            time.sleep(27) # will end at 4:45 seconds
         start_time = get_time_before(15)#24*60)
         df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
@@ -101,14 +101,14 @@ class signal_object:
             # check for criteria, and then enter position
             pos_change=10
             if symbol_id in self.top10symbols_prev:
-                pos_change = np.where(self.top10symbols_prev==symbol_id)[0]-currpos
+                pos_change = np.where(self.top10symbols_prev==symbol_id)[0][0]-currpos
             opened_pos = self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
         # check for other possible opening for positions
         for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
             if currpos==0: continue 
             pos_change=10
             if currsymbol in self.top10symbols_prev:
-                pos_change = np.where(self.top10symbols_prev==currsymbol)[0]-currpos
+                pos_change = np.where(self.top10symbols_prev==currsymbol)[0][0]-currpos
             if pos_change>1: # jumps by at least 2 positions
                 opened_pos = opened_pos or self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
         #if not opened_pos:# no change in top position, wait for next iteration
@@ -231,6 +231,7 @@ for idd in range(len( subset_symbols )):
 schedule.every(intvl).minutes.at(":50").do(run_threaded_no_data,s.get_signal_with_warnings)
 print(f"scheduled algos {datetime.datetime.now()}")
 # sleep for 3min and 24 seconds to make another data run......
+# but need to use data arguments for custom delays # TODO 
 while True:
     schedule.run_pending()
     time.sleep(1)
