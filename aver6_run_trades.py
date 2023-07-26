@@ -8,7 +8,7 @@ import json,datetime,schedule
 
 from aver6_trader import write_signal
 from aver6_funcs import get_data,get_entrys_exits,get_entry_signals, validate_dfmpl
-from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2
+from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
 import threading
 import numpy as np
 
@@ -178,10 +178,19 @@ class signal_object:
 def run_threaded(job_func,data):
     job_thread = threading.Thread(target=job_func,args=(data,))
     job_thread.start()
+def run_threaded_moredata(job_func,data,data1):
+    job_thread = threading.Thread(target=job_func,args=(data,data1))
+    job_thread.start()
 def run_threaded_no_data(job_func):
     job_thread = threading.Thread(target=job_func)
     job_thread.start()
 
+ddtn=datetime.datetime.now()
+
+ping(ERROR_PING2,f"new run {ddtn}")
+ping(STATUS_PING2,f"new run {ddtn}")
+ping(CRYPTO_SIGNALS2,f"new run {ddtn}")
+ping(CRYPTO_LOGS2,f"new run {ddtn}")
 
 # - every: 1 to 4th minute download previous data.
 # - every 4th minute, download all new data and sort them
@@ -232,6 +241,7 @@ schedule.every(intvl).minutes.at(":50").do(run_threaded_no_data,s.get_signal_wit
 print(f"scheduled algos {datetime.datetime.now()}")
 # sleep for 3min and 24 seconds to make another data run......
 # but need to use data arguments for custom delays # TODO 
+# see if run_threaded_moredata works
 while True:
     schedule.run_pending()
     time.sleep(1)
