@@ -90,14 +90,14 @@ class signal_object:
             # check for criteria, and then enter position
             pos_change=10
             if symbol_id in self.top10symbols_prev:
-                pos_change = self.top10symbols_prev.index(symbol_id)-currpos
+                pos_change = np.where(self.top10symbols_prev==symbol_id)[0]-currpos
             opened_pos = self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
         # check for other possible opening for positions
         for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
             if currpos==0: continue 
             pos_change=10
             if currsymbol in self.top10symbols_prev:
-                pos_change = self.top10symbols_prev.index(currsymbol)-currpos
+                pos_change = np.where(self.top10symbols_prev==currsymbol)[0]-currpos
             if pos_change>1: # jumps by at least 2 positions
                 opened_pos = opened_pos or self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
         if not opened_pos:# no change in top position, wait for next iteration
@@ -187,13 +187,26 @@ if delay > 5*60:
 # s.get_signal_with_warnings()
 # assert False
 ## end temp
+def first_run(): #TODO make the logic for firstrun
+    print(f"this is a first run at {datetime.datetime.now()}")
+    pass
+min_delay = 60+35
+if delay>min_delay:
+    print(f"first delay is very long, so do a run first, waiting for {delay-min_delay} secs")
+    # delay is very long, so do a run first.......
+    time.sleep(delay-min_delay)
+    first_run() 
+    # if delay is more than ~120seconds, 
+    # set firstrun True
+    # run the 2 data functions then argsort
+    # then set firstrun False
+    # then wait to apply new schedule. 
+    delay=min_delay
 print(f"waiting for {delay} secs")
-# if delay is more than ~120seconds, 
-# set firstrun True
-# run the 2 data functions then argsort
-# then set firstrun False
-# then wait to apply new schedule.
 time.sleep(delay)
+
+
+
 print(f"scheduling at {datetime.datetime.now()}")
 for idd in range(len( subset_symbols )):
     schedule.every(intvl).minutes.at(":50").do(run_threaded,s.fetch_24hr_data,idd)
