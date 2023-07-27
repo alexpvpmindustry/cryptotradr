@@ -34,7 +34,7 @@ try:
         buytimestr=str(datetime.datetime.now())[:-4]
         strr+=f"\n `{dfname}` (`{buytimestr}`)"
         if a1=="FILLED":# we have entered the trade
-            ping(CRYPTO_SIGNALS2,f"Entered {strr}")
+            ping(CRYPTO_SIGNALS2,f"👉Entered {strr}")
         elif a1=="INSUFFICIENTBALANCE":
             ping(CRYPTO_SIGNALS2,f"INSUFFICIENTBALANCE for entering {strr}")
             assert False
@@ -61,7 +61,7 @@ try:
             strat_data["Lows"] = min(strat_data["Lows"],cur_price)
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price) 
             if pas_strr[:2]=="Up": # shifting of SLTP
-                ping(CRYPTO_SIGNALS2,pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` CurPri`{cur_price:{price_format}}` "+pas_strr)
+                ping(CRYPTO_SIGNALS2,"🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` CurPri`{cur_price:{price_format}}` "+pas_strr)
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
             if status=="HOLD":
@@ -74,7 +74,7 @@ try:
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
+            strr = f"{sign}Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
             strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`) (ExitTime`{exittime}`)\n"
             highfrac=(strat_data['Highs']-enter_data['price'])/enter_data['price']
