@@ -34,40 +34,38 @@ class signal_object:
         self.argsorted_data=None # [ordered ticker,time]
         self.subset_symbols=subset_symbols
         self.top10symbols_prev=None
-        self.top10symbols_temp=None
-        self.firstrun=False
+        self.top10symbols_temp=None 
         self.pos_number=0
-    def fetch_24hr_data(self,idd): # do this every 1 to 4 th minute
-        
-        if not self.firstrun:
+    def fetch_24hr_data(self,idd,instantRun=False): # do this every 1 to 4 th minute
+        if instantRun:
+            time.sleep(0.05*idd)
+        else:
             time.sleep(0.15*idd)
             time.sleep(2*60)
-        else:
-            time.sleep(0.05*idd)
         start_time = get_time_before(15)#24*60)
         df0 = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time-3600_000*24,offset=self.offset)
         self.fetched_24hr_data[idd]=df0.copy()
         self.fetched_24hr_data_sync[idd]+=1
         if idd in [0,len(subset_symbols)-1]:
-            if not self.firstrun:
+            if not instantRun:
                 self.consolelog(f"0> fetch 24hr data{idd}")
             else:
-                self.consolelog(f"0>0 fetch 24hr data{idd}")
-    def fetch_new_data(self,idd): # do this every 4:10 th minute
-        time.sleep(0.05*idd) 
-        if not self.firstrun:
-            time.sleep( 4*60+43)
-        else:
+                self.consolelog(f"0>instantRun fetch 24hr data{idd}")
+    def fetch_new_data(self,idd,instantRun=False): # do this every 4:10 th minute
+        time.sleep(0.05*idd)
+        if instantRun:
             time.sleep(27) # will end at 4:45 seconds
+        else:
+            time.sleep( 4*60+43)
         start_time = get_time_before(15)#24*60)
         df = get_data(subset_symbols[idd]+"USDT","5m",limit=3,start_time=start_time,offset=self.offset)
         self.fetched_fresh_all_data[idd]=df.copy()
         self.fetched_fresh_all_data_sync[idd]+=1
         if idd in [0,len(subset_symbols)-1]:
-            if not self.firstrun:
+            if not instantRun:
                 self.consolelog(f"1> fetch temp data{idd}")
             else:
-                self.consolelog(f"1>0 fetch temp data{idd}")
+                self.consolelog(f"1>instantRun fetch temp data{idd}")
     def argsort_data(self):
         hr24change = [(df_aft.Close.values-df_bef.Close.values)/df_bef.Close.values for df_bef, df_aft in zip(self.fetched_24hr_data,self.fetched_fresh_all_data)]
         hr24change = np.asarray(hr24change)
@@ -101,7 +99,7 @@ class signal_object:
             # check for criteria, and then enter position
             pos_change=10
             if symbol_id in self.top10symbols_prev:
-                pos_change = np.where(self.top10symbols_prev==symbol_id)[0][0]-currpos
+                pos_change = np.where(self.top10symbols_prev==symbol_id)[0][0]
             opened_pos = self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
         # check for other possible opening for positions
         for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
@@ -161,29 +159,23 @@ class signal_object:
         print(f"{self.ddtn_str()}, {strr}") 
     def ddtn_str(self):
         return str(datetime.datetime.now())[:-4]
-    def get_signal_with_warnings(self):# execute this at :55 seconds
+    def get_signal_with_warnings(self,instantRun=False,delay=53):# execute this at :55 seconds
         # started at 1:50 seconds
         try:
-            if not self.firstrun:
+            if not instantRun:
                 self.consolelog(f"2> sleeping for signal,{ 5+5*60}secs")
                 time.sleep(5+5*60) # this is more than 5mins to skip the first one, this works normally afterwards
             else:
-                self.consolelog(f"2>0 firstrun sleeping for signal,{ 53}secs")
-                time.sleep(53)
+                self.consolelog(f"2>instantRun sleeping for signal,{ delay}secs")
+                time.sleep(delay)
             self.get_signal()
         except Exception as e:
             ping(ERROR_PING2,f"error {ALEXPING}"+str(e))
             raise
 
-def run_threaded(job_func,data):
-    job_thread = threading.Thread(target=job_func,args=(data,))
-    job_thread.start()
-def run_threaded_moredata(job_func,data,data1):
-    job_thread = threading.Thread(target=job_func,args=(data,data1))
-    job_thread.start()
-def run_threaded_no_data(job_func):
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
+def run_threaded(job_func,*data):
+    job_thread = threading.Thread(target=job_func,args=data)
+    job_thread.start() 
 
 ddtn=datetime.datetime.now()
 
@@ -204,44 +196,39 @@ delay = (intvl-1-ddtn.minute%intvl)*60+(60-ddtn.second+35) # 0min 35 seconds aft
 if delay > 5*60:
     delay -= 5*60
 
-##temp
-# for idd in range(len( subset_symbols )):
-#     s.fetch_24hr_data(idd)
-#     s.fetch_new_data(idd)
-# s.get_signal_with_warnings()
-# assert False
-## end temp
-def first_run(): #TODO make the logic for firstrun
-    print(f"this is a first run at {datetime.datetime.now()}")
+def first_run(name="first"): #TODO make the logic for firstrun
+    print(f"this is a {name} run at {datetime.datetime.now()}")
     for idd in range(len( subset_symbols )):
-        run_threaded(s.fetch_24hr_data,idd)
-        run_threaded(s.fetch_new_data,idd)
-    run_threaded_no_data(s.get_signal_with_warnings) 
+        run_threaded(s.fetch_24hr_data,idd,True)
+        run_threaded(s.fetch_new_data,idd,True)
+    run_threaded(s.get_signal_with_warnings,True) 
 min_delay = 60+35
 if delay>min_delay:
     print(f"first delay is very long, so do a run first, waiting for {delay-min_delay} secs , {datetime.datetime.now()}")
     # delay is very long, so do a run first.......
     time.sleep(delay-min_delay)
     # time now should be at 4:00
-    print(f"time now should be 4:00, {datetime.datetime.now()}")
-    s.firstrun=True
+    print(f"time now should be 4:00, {datetime.datetime.now()}") 
     first_run()
     print(f"done threaded first run, {datetime.datetime.now()}")
     delay=min_delay
 print(f"waiting for {delay} secs, {datetime.datetime.now()}")
 time.sleep(delay)
-# now we are at X:35 minutes where X is a multiple of 5
-s.firstrun=False
+# now we are at X:35 minutes where X is a multiple of 5 
 
 print(f"scheduling at {datetime.datetime.now()}")
 for idd in range(len( subset_symbols )):
     schedule.every(intvl).minutes.at(":50").do(run_threaded,s.fetch_24hr_data,idd)
     schedule.every(intvl).minutes.at(":50").do(run_threaded,s.fetch_new_data,idd)
-schedule.every(intvl).minutes.at(":50").do(run_threaded_no_data,s.get_signal_with_warnings)
+schedule.every(intvl).minutes.at(":50").do(run_threaded,s.get_signal_with_warnings)
 print(f"scheduled algos {datetime.datetime.now()}")
 # sleep for 3min and 24 seconds to make another data run......
 # but need to use data arguments for custom delays # TODO 
 # see if run_threaded_moredata works
+print(f"waiting for {3*60+24} secs to run 2nd data run, {datetime.datetime.now()}")
+time.sleep(3*60+24)
+print(f"threading a 2nd data run now, it should be 4:00 minute, {datetime.datetime.now()}")
+first_run("2nd")
 while True:
     schedule.run_pending()
     time.sleep(1)
