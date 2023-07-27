@@ -156,9 +156,9 @@ def strat_tpsl2(enter_data,strat_data,cur_price):# only HOLD or SELL
         strat_status = "UpSlow"
     str1=f"SL`{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"
     str1+=f"TP`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
-    str2=f"(`{strat_data['cur_sl']:.2%}`,`{(cur_price-enter_price)/enter_price:.2%}`,`{strat_data['cur_tp']:.2%}`)"
-    str3=f"\nNxtlvl: `{(1+strat_data['cur_sl']+width*0.06)*enter_price:{price_format}}`,"
-    str4=f"(`{(strat_data['cur_sl']+width*0.06):.2%}`)" 
+    str2=f"(`{strat_data['cur_sl']:+.2%}`,`{(cur_price-enter_price)/enter_price:+.2%}`,`{strat_data['cur_tp']:+.2%}`)"
+    str3=f"\nNxtlvl: `{(1+strat_data['cur_sl']+width*0.55)*enter_price:{price_format}}`,"
+    str4=f"(`{(strat_data['cur_sl']+width*0.55):+.2%}`)" 
     str5=f"width={width:.2%}"
     return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
 def price_action_signal(enter_data,strat_data,cur_price):

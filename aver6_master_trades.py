@@ -30,7 +30,7 @@ try:
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         emoji=get_random_emoji()
-        strr =f"`{symbol}{emoji}`, `{cur_price:{price_format}}` {pos_type} `Trd{pos_number}` {critStr}"
+        strr =f"`{symbol}`{emoji}, `{cur_price:{price_format}}` {pos_type} `Trd{pos_number}` {critStr}"
         buytimestr=str(datetime.datetime.now())[:-4]
         strr+=f"\n `{dfname}` (`{buytimestr}`)"
         if a1=="FILLED":# we have entered the trade
@@ -76,9 +76,10 @@ try:
             sign = '⬆️' if change>0 else '⬇️'
             strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
-            strr+= f"(ExitTime`{exittime}`) "
-            strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`)\n"
-            strr+= f"High {strat_data['Highs']:{price_format}}, Low{strat_data['Lows']:{price_format}}\n"
+            strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`) (ExitTime`{exittime}`)\n"
+            highfrac=(enter_data['price']-strat_data['Highs'])/enter_data['price']
+            lowfrac=(enter_data['price']-strat_data['Lows'])/enter_data['price']
+            strr+= f"High `{strat_data['Highs']:{price_format}}` (`{highfrac:.2%}`), Low `{strat_data['Lows']:{price_format}}` (`{lowfrac:.2%}`)\n"
             strr+= f"{critStr}\n"
             reason=""
             if pas_status=="SELL":
