@@ -106,7 +106,7 @@ class signal_object:
         # check for other possible opening for positions
         for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
             if currpos==0: continue 
-            pos_change=10
+            pos_change=10 # need to check this logic... might not be true
             if currsymbol in self.top10symbols_prev:
                 pos_change = np.where(self.top10symbols_prev==currsymbol)[0][0]-currpos
             if pos_change>1: # jumps by at least 2 positions
@@ -132,16 +132,16 @@ class signal_object:
                 criteria_passed=True
         if criteria_passed: 
             self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback,pos_type)
-            ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
+            #ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
             opened_pos=True
-        else: # did not pass criteria
-            criteria_str= f"gain{gain:.2%}"+criteria_str
-            strr=""
-            if pos_type[:4]=="TopP":
-                strr=f"Signal failed: {pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
-            if pos_type[:4]=="JUMP":
-                strr=f"Signal failed: {pos_type} ,critFail,{criteria_str}"
-            ping(CRYPTO_SIGNALS2,strr)
+        # else: # did not pass criteria
+        #     criteria_str= f"gain{gain:.2%}"+criteria_str
+        #     strr=""
+        #     if pos_type[:4]=="TopP":
+        #         strr=f"Signal failed: {pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
+        #     if pos_type[:4]=="JUMP":
+        #         strr=f"Signal failed: {pos_type} ,critFail,{criteria_str}"
+        #     ping(CRYPTO_SIGNALS2,strr)
         return opened_pos
     def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback,pos_type):
         xx = closeprice

@@ -154,10 +154,10 @@ def strat_tpsl2(enter_data,strat_data,cur_price):# only HOLD or SELL
         strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.06 # increases 0.24% = 4%*0.06
         strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.06 # increases 0.24% = 4%*0.06
         strat_status = "UpSlow"
-    str1=f"SLTP `{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"\
-         f"`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
+    str1=f"SL`{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"
+    str1+=f"TP`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
     str2=f"(`{strat_data['cur_sl']:.2%}`,`{(cur_price-enter_price)/enter_price:.2%}`,`{strat_data['cur_tp']:.2%}`)"
-    str3=f"\nNextlvl: `{(1+strat_data['cur_sl']+width*0.06)*enter_price:{price_format}}`,"
+    str3=f"\nNxtlvl: `{(1+strat_data['cur_sl']+width*0.06)*enter_price:{price_format}}`,"
     str4=f"(`{(strat_data['cur_sl']+width*0.06):.2%}`)" 
     str5=f"width={width:.2%}"
     return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
@@ -187,5 +187,5 @@ def read_signal(ticker,interval):
 def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,reason=""):
     strr = f"{ticker},{interval},open{openprice:{price_format}},closeprice{closeprice:{price_format}},"
     strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{reason}\n"
-    with open("trade_logs/results_trades10_27_07_2023.log","a") as f:
+    with open("trade_logs/results_trades11_27_07_2023.log","a") as f:
         f.writelines(strr)

@@ -18,7 +18,7 @@ try:
     cur_price = get_current_price(symbol,sell=False)
     price_format=".6g"
     sl=-0.02
-    tp=0.048
+    tp=0.02
     hl_pairs=None
     interval="5m"
     passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
@@ -49,33 +49,19 @@ try:
         enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
                     "hl_pairs":hl_pairs,"strat":"strat_tpsl2"}
         strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,
-                      "strat":"strat_tpsl2","shiftSureProfit":False}
+                      "strat":"strat_tpsl2","shiftSureProfit":False,"Highs":cur_price,"Lows":cur_price}
 
         stdmean_status="HOLD"
         stdmean_status_exited=False
         pas_status="HOLD"
         pas_strr=""
         while status=="HOLD": 
-            cur_price = get_current_price(symbol) 
-            pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
-            ## start of update routine
-            # updated=False;update_list=[] 
-            # update_list.append(pas_strr[:6])
-            # while (pas_strr[:2]=="Up"):
-            #     # repeat until its not up anymore, then take the prev sl and tp
-            #     prev_strat_data = strat_data.copy()
-            #     prev_pas_status = pas_status
-            #     prev_pas_strr = pas_strr
-            #     pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price)
-            #     if pas_strr[:2]=="Up":
-            #         updated=True
-            #         update_list.append(pas_strr[:6]) 
-            # if updated:
-            #     pas_status,strat_data,pas_strr = prev_pas_status,prev_strat_data.copy(),prev_pas_strr
-            #     pas_strr = " ".join(update_list[:-1])+" "+pas_strr
-            ## end of update routine
+            cur_price = get_current_price(symbol)
+            strat_data["Highs"] = max(strat_data["Highs"],cur_price)
+            strat_data["Lows"] = max(strat_data["Lows"],cur_price)
+            pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price) 
             if pas_strr[:2]=="Up": # shifting of SLTP
-                ping(CRYPTO_SIGNALS2,pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` `{cur_price:{price_format}}` "+pas_strr)
+                ping(CRYPTO_SIGNALS2,pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` CurPri`{cur_price:{price_format}}` "+pas_strr)
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
             if status=="HOLD":
@@ -84,14 +70,15 @@ try:
         # sell position
         a1,a2,a3 = market_trade(symbol,qty,buy=False,test=test)
         cur_price = get_current_price(symbol)# to simulate current sell price #TODO fix this for real sells
-        exittime=str(datetime.datetime.now())[:-4]
+        exittime=str(datetime.datetime.now())[11:-4]
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPrice`{cur_price:{price_format}}`,"
+            strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
             strr+= f"(ExitTime`{exittime}`) "
-            strr+= f"size=`${qtyUSD}` (RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`)\n"
+            strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`)\n"
+            strr+= f"High {strat_data['Highs']:{price_format}}, Low{strat_data['Lows']:{price_format}}\n"
             strr+= f"{critStr}\n"
             reason=""
             if pas_status=="SELL":
