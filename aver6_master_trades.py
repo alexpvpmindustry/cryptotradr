@@ -77,8 +77,8 @@ try:
             strr = f"Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
             strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`) (ExitTime`{exittime}`)\n"
-            highfrac=(enter_data['price']-strat_data['Highs'])/enter_data['price']
-            lowfrac=(enter_data['price']-strat_data['Lows'])/enter_data['price']
+            highfrac=(strat_data['Highs']-enter_data['price'])/enter_data['price']
+            lowfrac=(strat_data['Lows']-enter_data['price'])/enter_data['price']
             strr+= f"High `{strat_data['Highs']:{price_format}}` (`{highfrac:.2%}`), Low `{strat_data['Lows']:{price_format}}` (`{lowfrac:.2%}`)\n"
             strr+= f"{critStr}\n"
             reason=""

@@ -25,7 +25,7 @@ class signal_object:
         self.last_ran = int(time.time())
         self.price_format = ".6g"
         self.offset=8*3600*1000
-        self.tp=0.048
+        self.tp=0.02
         self.sl=-0.02
         self.fetched_24hr_data=[[] for s in subset_symbols]
         self.fetched_fresh_all_data = [[] for s in subset_symbols]
@@ -81,14 +81,14 @@ class signal_object:
             self.fetched_24hr_data_sync=[0 for s in subset_symbols]
             self.fetched_fresh_all_data_sync = [0 for s in subset_symbols]
             return False
-    def get_signal(self):# execute this at 4:56 th minute
+    def get_signal(self,name):# execute this at 4:56 th minute
         self.last_ran = int(time.time())
         self.argsort_data()
         with open("trade_logs/data_logging_24_7_2023.log","a") as f:
             strr ="argsorted_data,"+self.ddtn_str()+"\n"
             strr+="_".join([ ",".join([ str(aa) for aa in a]) for a in self.argsorted_data]) + "\n"
             f.writelines( [strr] )
-            self.consolelog("2> get_signal writelines")
+            self.consolelog(f"2>{name} get_signal writelines")
         #print(self.fetched_24hr_data)
         #print(self.fetched_fresh_all_data)
 
@@ -144,7 +144,7 @@ class signal_object:
     def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback,pos_type):
         xx = closeprice
         strr = f"`{symbol}` BUY `{xx}`" 
-        strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}`\n"
+        strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}` {pos_type}\n"
         strr += f"`{dfname}` (`{self.ddtn_str()}`) {SIGNALROLE}"
         write_signal(symbol,self.interval,signal="ENTER",closeprice=xx,dfname=dfname)
         # execute trading algo
@@ -168,7 +168,7 @@ class signal_object:
             else:
                 self.consolelog(f"2>instantRun sleeping for signal,{ delay}secs")
                 time.sleep(delay)
-            self.get_signal()
+            self.get_signal("instantRun" if instantRun else "")
         except Exception as e:
             ping(ERROR_PING2,f"error {ALEXPING}"+str(e))
             raise
