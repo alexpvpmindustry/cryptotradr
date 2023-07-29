@@ -29,7 +29,7 @@ def mapped(i): # changed this
 def now_ms():
     return int(time.time()*1_000)
 
-def get_data(tickerpair,interval,limit=1000,type="live",start_time=None,offset=3600*3*1e3):
+def get_data(tickerpair,interval,limit=1000,type="live",start_time=None,offset=3600*3*1e3,try_interval=20):
     """limit==0 for no limit
     type: live,sampledata,data
     """
@@ -37,7 +37,7 @@ def get_data(tickerpair,interval,limit=1000,type="live",start_time=None,offset=3
         klines = get_klines_live(tickerpair,interval,limit=limit,start_time=start_time)
         trys=0
         while ((klines is None) or (len(klines)==0)):
-            time.sleep(20)
+            time.sleep(try_interval)
             klines = get_klines_live(tickerpair,interval,limit=limit,start_time=start_time)
             trys+=1
             if trys>3*10:
