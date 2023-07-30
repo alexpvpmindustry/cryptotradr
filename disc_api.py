@@ -15,6 +15,15 @@ ALEXPING="<@612861256189083669>"
 def ping(chnl,strr):
     requests.post(chnl,data={"content":strr})
 
+def pingfile(chnl,strr,filename,file=""):
+    """file=open('fig_temp3.png', 'rb')
+    example usage: 
+    pingfile(ERROR_PING2,strr,"hehe.txt","open('fig_temp3.png', 'rb')\nwfgwefwef")
+    pingfile(ERROR_PING2,strr,"hehe.png",open('fig_temp3.png', 'rb'))
+    """
+    requests.post(chnl,data={"content":strr},
+                  files = {'files': (filename,file )})
+
 emojis='🍏🍎🍐🍊🍋🍌🍉🍇🍓🫐🍈🍒🍑🥭🍍🥥🥝🍅🍆'\
 '🥑🥦🥬🥒🌶🫑🌽🥕🫒🧄🧅🥔🍠🥐🥯🍞🥖🥨🧀🥚'\
 '🍳🧈🥞🧇🥓🥩🍗🍖🦴🌭🍔🍟🍕🫓🥪🥙🧆🌮🌯🫔'\
