@@ -31,6 +31,10 @@ python testimports.py
 - fix entry for times when entry was before initialisation ( need to check )
 - look for tickers at 5m interval with more than 9% (to 6%) change. next ticks might be high.
     - see STMXUSDT at 2023/7/23 12:30
+- restructure the code so that its more modular. the followings should be kept seperate
+    - download/get data, identify signals, act on signals
+    - this way, (2) and (3) can be backtested
+
 
 - ✅ rewrite `run_trades_ver2.py` to scale up to ~750 ticker/interval pairs per 5 minutes
 - ✅ fix run_trades_ver2, dont Upslow on initial run?
