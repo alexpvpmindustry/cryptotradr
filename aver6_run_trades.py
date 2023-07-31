@@ -8,7 +8,7 @@ import json,datetime,schedule
 
 from aver6_trader import write_signal
 from aver6_funcs import get_data,get_entrys_exits,get_entry_signals, validate_dfmpl
-from disc_api import ALEXPING, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
+from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
 import threading
 import numpy as np
 
@@ -172,11 +172,11 @@ def run_threaded(job_func,*data):
     job_thread.start() 
 
 ddtn=datetime.datetime.now()
-
-ping(ERROR_PING2,f"new run {ddtn}")
-ping(STATUS_PING2,f"new run {ddtn}")
-ping(CRYPTO_SIGNALS2,f"new run {ddtn}")
-ping(CRYPTO_LOGS2,f"new run {ddtn}")
+rand_emoji = f"{get_random_emoji()}{get_random_emoji()}{get_random_emoji()}"
+ping(ERROR_PING2,f"new run {ddtn},{rand_emoji}")
+ping(STATUS_PING2,f"new run {ddtn},{rand_emoji}")
+ping(CRYPTO_SIGNALS2,f"new run {ddtn},{rand_emoji}")
+ping(CRYPTO_LOGS2,f"new run {ddtn},{rand_emoji}")
 
 # - every: 1 to 4th minute download previous data.
 # - every 4th minute, download all new data and sort them
