@@ -64,7 +64,7 @@ try:
             if pas_strr[:2]=="Up": # shifting of SLTP
                 timenow=str(datetime.datetime.now())[11:-4]
                 strr_="🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}`"
-                strr_+=" CurPri`{cur_price:{price_format}}` "+pas_strr+f" ({timenow})"
+                strr_+=f" CurPri`{cur_price:{price_format}}` "+pas_strr+f" ({timenow})"
                 ping(CRYPTO_SIGNALS2,strr_)
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
