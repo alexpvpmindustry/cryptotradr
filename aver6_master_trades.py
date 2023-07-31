@@ -17,8 +17,8 @@ try:
     pos_number = int(sys.argv[9])
     cur_price = get_current_price(symbol,sell=False)
     price_format=".6g"
-    sl=-0.02
-    tp=0.02
+    sl=-0.005
+    tp=0.015
     hl_pairs=None
     interval="5m"
     passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
