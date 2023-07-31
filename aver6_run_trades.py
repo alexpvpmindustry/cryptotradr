@@ -70,7 +70,7 @@ class signal_object:
         hr24change = [(df_aft.Close.values-df_bef.Close.values)/df_bef.Close.values for df_bef, df_aft in zip(self.fetched_24hr_data,self.fetched_fresh_all_data)]
         hr24change = np.asarray(hr24change)
         self.argsorted_data = np.argsort(-hr24change,axis=0) # the last row is the new incomplete data
-        self.top10symbols_prev = self.argsorted_data[:10,1] # previous order
+        self.top10symbols_prev = self.argsorted_data[:20,1] # previous order
         self.top10symbols_temp = self.argsorted_data[:10,2] # current temp order 
     def checksync(self):
         avg = np.mean( self.fetched_24hr_data_sync )==np.mean(self.fetched_fresh_all_data_sync)
@@ -84,7 +84,7 @@ class signal_object:
     def get_signal(self,name):# execute this at 4:56 th minute
         self.last_ran = int(time.time())
         self.argsort_data()
-        with open("trade_logs/data_logging_24_7_2023.log","a") as f:
+        with open("trade_logs/data_logging_31_7_2023.log","a") as f:
             strr ="argsorted_data,"+self.ddtn_str()+"\n"
             strr+="_".join([ ",".join([ str(aa) for aa in a]) for a in self.argsorted_data]) + "\n"
             f.writelines( [strr] )
@@ -93,22 +93,22 @@ class signal_object:
         #print(self.fetched_fresh_all_data)
 
         self.top10current = [subset_symbols[iii] for iii in self.top10symbols_temp[:10]] 
-        opened_pos = False
+        opened_pos = 0
         symbol_id = self.top10symbols_temp[0]
         if not self.top10symbols_prev[0]==self.top10symbols_temp[0]:
             # check for criteria, and then enter position
-            pos_change=10
+            pos_change=20
             if symbol_id in self.top10symbols_prev:
                 pos_change = np.where(self.top10symbols_prev==symbol_id)[0][0]
-            opened_pos = self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
+            opened_pos += self.checkCriteria_then_openPos(symbol_id,pos_type=f"TopPos_Jump{pos_change}")
         # check for other possible opening for positions
         for currpos,currsymbol in enumerate(self.top10symbols_temp): # ignore the first one
             if currpos==0: continue 
-            pos_change=10 # need to check this logic... might not be true
+            pos_change=20 # need to check this logic... might not be true
             if currsymbol in self.top10symbols_prev:
                 pos_change = np.where(self.top10symbols_prev==currsymbol)[0][0]-currpos
             if pos_change>1: # jumps by at least 2 positions
-                opened_pos = opened_pos or self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
+                opened_pos += self.checkCriteria_then_openPos(currsymbol,pos_type=f"JUMP{pos_change}POS")
         #if not opened_pos:# no change in top position, wait for next iteration
         synced = self.checksync()
         top10current = ",".join(self.top10current)
@@ -116,30 +116,24 @@ class signal_object:
         self.consolelog("fin signals")
 
     def checkCriteria_then_openPos(self, symbol_id,pos_type):
-        criteria_passed = False
-        criteria_str = ""
+        criteria_passed = False 
         symbol = self.subset_symbols[symbol_id]
         df=self.fetched_fresh_all_data[symbol_id]
-        opened_pos=False
+        opened_pos=0
         loc0=2
         gain=(df.iloc[loc0].Close-df.iloc[loc0].Open)/df.iloc[loc0].Open
         if gain>=0.005: # was 0.03
-            pullback = (df.iloc[loc0].High - df.iloc[loc0].Close)/(df.iloc[loc0].High - df.iloc[loc0].Open)
-            criteria_str =f",pb{pullback:.2%}."
+            pullback = (df.iloc[loc0].High - df.iloc[loc0].Close)/(df.iloc[loc0].High - df.iloc[loc0].Open) 
             if pullback <=0.5: # was 0.3
-                criteria_passed=True
+                vol0=df.iloc[loc0].Volume
+                vol1=df.iloc[loc0-1].Volume
+                vol2=df.iloc[loc0-2].Volume
+                if (vol0>vol1) and (vol0>vol2) and (vol0>(vol2+vol1)):
+                    criteria_passed=True
         if criteria_passed: 
             self.enter_position(symbol,df.iloc[loc0].Close,df.iloc[loc0].name,gain,pullback,pos_type)
             #ping(CRYPTO_SIGNALS2,f"ENTERSIGNAL({pos_type}) `{symbol}` `{df.iloc[loc0].Close:{self.price_format}}` `{self.ddtn_str()}`")
-            opened_pos=True
-        # else: # did not pass criteria
-        #     criteria_str= f"gain{gain:.2%}"+criteria_str
-        #     strr=""
-        #     if pos_type[:4]=="TopP":
-        #         strr=f"Signal failed: {pos_type} prev `{self.subset_symbols[self.top10symbols_prev[0]]}`, curr `{symbol}`,critFail,{criteria_str}"
-        #     if pos_type[:4]=="JUMP":
-        #         strr=f"Signal failed: {pos_type} ,critFail,{criteria_str}"
-        #     ping(CRYPTO_SIGNALS2,strr)
+            opened_pos=1
         return opened_pos
     def enter_position(self,symbol,closeprice,dfname,criteria_gain,criteria_pullback,pos_type):
         xx = closeprice

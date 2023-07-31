@@ -99,40 +99,7 @@ def market_trade(symbol,quantity,buy=True,test=True):
                 raise Exception("nani?") from e
 
 # trading strats
-def strat_tpsl1(enter_data,strat_data,cur_price):# only HOLD or SELL
-    # strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl1"}
-    enter_price = enter_data["price"]
-    if cur_price < ((1+strat_data["cur_sl"])*enter_price ): 
-        return "SELL",strat_data,f"Stop L{strat_data['cur_sl']*100:.2f}%"
-    elif cur_price > ((1+strat_data["cur_tp"])*enter_price ): 
-        return "SELL",strat_data,f"Take P{strat_data['cur_tp']*100:.2f}%"
-    # strats to shrink tp and sl
-    width=enter_data["tp"]-enter_data["sl"]
-    #print("width",width)
-    strat_status="In SLTP"
-    if cur_price > ( (1+strat_data["cur_sl"]+width*0.9)*enter_price):
-        strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.8
-        strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.8
-        strat_status = "UpFast"
-    elif cur_price > ( (1+strat_data["cur_sl"]+width*0.6)*enter_price ):
-        strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.2
-        strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.5
-        strat_status = "UpMedi"
-    elif cur_price > ( (1+strat_data["cur_sl"]+width*0.3)*enter_price ):
-        strat_data["cur_sl"] = strat_data["cur_sl"]+width*0.1
-        strat_data["cur_tp"] = strat_data["cur_tp"]+width*0.1
-        strat_status = "UpSlow"
-    str1=f"LP `{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"\
-         f"`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
-    str2=f"(`{strat_data['cur_sl']*100:.2f}`,`{strat_data['cur_tp']*100:.2f}`)%"
-    str3=f"\nNext levels: `{(1+strat_data['cur_sl']+width*0.3)*enter_price:{price_format}}`,"\
-         f"`{(1+strat_data['cur_sl']+width*0.6)*enter_price:{price_format}}`,"\
-         f"`{(1+strat_data['cur_sl']+width*0.9)*enter_price:{price_format}}`"
-    str4=f"(`{(strat_data['cur_sl']+width*0.3)*100:.2f}`,"\
-         f"`{(strat_data['cur_sl']+width*0.6)*100:.2f}`,"\
-         f"`{(strat_data['cur_sl']+width*0.9)*100:.2f}`)%"
-    str5=f"width={width*100:.2f}%"
-    return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
+
 def strat_tpsl2(enter_data,strat_data,cur_price):# only HOLD or SELL
     # strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl1"}
     enter_price = enter_data["price"]
@@ -161,16 +128,44 @@ def strat_tpsl2(enter_data,strat_data,cur_price):# only HOLD or SELL
     str4=f"(`{(strat_data['cur_sl']+width*0.55):+.2%}`)" 
     str5=f"width={width:.2%}"
     return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
+def strat_tpsl3(enter_data,strat_data,cur_price):# only HOLD or SELL
+    # strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,"strat":"strat_tpsl3","rolling_price":rolling_price}
+    enter_price = enter_data["price"]
+    if cur_price < ((1+strat_data["cur_sl"])*enter_price ): 
+        return "SELL",strat_data,f"StopLoss{strat_data['cur_sl']:.2%}"
+    elif cur_price > ((1+strat_data["cur_tp"])*enter_price ): 
+        return "SELL",strat_data,f"TakeProf{strat_data['cur_tp']:.2%}"
+    # strats to shrink tp and sl
+    # width=enter_data["tp"]-enter_data["sl"] # +1.5% -0.5%
+    # print("width",width)
+    strat_status="In SLTP"
+    nextlvlincrease=0.005 # 0.5%
+    if (not strat_data["shiftSureProfit"]) and (cur_price > ( 1.01*enter_price )): # if more than 1% gain from enterprice, move sltp
+        strat_status = "Up1%StopLoss"
+        strat_data["cur_sl"] = 0.008
+        strat_data["cur_tp"] = 0.028
+        strat_data["shiftSureProfit"]=True
+    elif cur_price > (strat_data["rolling_price"]*(1+nextlvlincrease)):
+        #( (1+strat_data["cur_sl"]+width*0.55)*enter_price ): # shifts up by 0.55*4%-2% =0.2% from center point
+        strat_data["cur_sl"] =  (cur_price-enter_price)/enter_price-0.005
+        strat_data["cur_tp"] =  (cur_price-enter_price)/enter_price+0.015
+        strat_status = "UpSlow"
+        strat_data["rolling_price"]=cur_price
+    str1=f"SL`{enter_price*(1+strat_data['cur_sl']):{price_format}}`,"
+    str1+=f"TP`{enter_price*(1+strat_data['cur_tp']):{price_format}}`"
+    str2=f"(`{strat_data['cur_sl']:+.2%}`,`{(cur_price-enter_price)/enter_price:+.2%}`,`{strat_data['cur_tp']:+.2%}`)"
+    str3=f"\nNxtlvl: `{strat_data['rolling_price']*(1+nextlvlincrease):{price_format}}`,"
+    str4=f"(`{nextlvlincrease:+.2%}`)" 
+    str5=f"width={strat_data['cur_tp']-strat_data['cur_sl']:.2%}"
+    
+    return "HOLD",strat_data,f"{strat_status} {str1} {str2}{str3}{str4}, {str5}"
 def price_action_signal(enter_data,strat_data,cur_price):
     # enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
     #          "hl_pairs":hl_pairs,"strat":"strat_tpsl1"}
-    if enter_data["strat"]=="strat_rollingtpsl1":
-        #return strat_rollingtpsl1(enter_data,strat_data,cur_price)
-        pass
-    elif enter_data["strat"]=="strat_tpsl1":
-        return strat_tpsl1(enter_data,strat_data,cur_price)
-    elif enter_data["strat"]=="strat_tpsl2":
+    if enter_data["strat"]=="strat_tpsl2":
         return strat_tpsl2(enter_data,strat_data,cur_price)
+    elif enter_data["strat"]=="strat_tpsl3":
+        return strat_tpsl3(enter_data,strat_data,cur_price)
     else:
         raise NotImplementedError("#todo strat :(")
 def write_signal(ticker,interval,signal,closeprice,dfname):
@@ -184,8 +179,8 @@ def read_signal(ticker,interval):
         signal_raw = f.readlines()
     signal=signal_raw[-1].split(",")[0]
     return signal
-def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,reason=""):
+def log_trade_results(ticker,interval,openprice,closeprice,dfname,starttime,exittime,reason="",pos_type="",critStr=""):
     strr = f"{ticker},{interval},open{openprice:{price_format}},closeprice{closeprice:{price_format}},"
-    strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{reason}\n"
-    with open("trade_logs/results_trades13_27_07_2023.log","a") as f:
+    strr+= f"dfname{dfname},starttime{starttime},exittime{exittime},exitreason{reason},postype{pos_type},critStr{critStr}\n"
+    with open("trade_logs/results_trades14_31_07_2023.log","a") as f:
         f.writelines(strr)

@@ -47,9 +47,9 @@ try:
 
         ent_time=str(datetime.datetime.now())[:-4].replace(" ","_")
         enter_data = {"price":cur_price,"sl":sl,"tp":tp,"dfname":dfname,"ent_time":ent_time,
-                    "hl_pairs":hl_pairs,"strat":"strat_tpsl2"}
+                    "hl_pairs":hl_pairs,"strat":"strat_tpsl3"}
         strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,
-                      "strat":"strat_tpsl2","shiftSureProfit":False,"Highs":cur_price,"Lows":cur_price}
+                      "strat":"strat_tpsl3","shiftSureProfit":False,"Highs":cur_price,"Lows":cur_price,"rolling_price":cur_price}
 
         stdmean_status="HOLD"
         stdmean_status_exited=False
@@ -91,7 +91,7 @@ try:
             ping(CRYPTO_SIGNALS2,strr)
             ping(CRYPTO_LOGS2,strr)
             log_trade_results(symbol,interval,enter_data['price'],cur_price,
-                            dfname,ent_time,exittime,reason)
+                            dfname,ent_time,exittime,reason,pos_type,critStr)
         else:
             ping(ERROR_PING2,f"EXIT ERROR {emoji} {symbol}{interval} {ALEXPING}")
             raise
