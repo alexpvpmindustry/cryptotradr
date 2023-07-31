@@ -55,13 +55,16 @@ try:
         stdmean_status_exited=False
         pas_status="HOLD"
         pas_strr=""
+        timenow=str(datetime.datetime.now())[11:-4]
         while status=="HOLD": 
             cur_price = get_current_price(symbol)
             strat_data["Highs"] = max(strat_data["Highs"],cur_price)
             strat_data["Lows"] = min(strat_data["Lows"],cur_price)
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price) 
             if pas_strr[:2]=="Up": # shifting of SLTP
-                ping(CRYPTO_SIGNALS2,"🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}` CurPri`{cur_price:{price_format}}` "+pas_strr)
+                strr_="🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}`"
+                strr_+=" CurPri`{cur_price:{price_format}}` "+pas_strr+f" ({timenow})"
+                ping(CRYPTO_SIGNALS2,strr_)
             status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
             if status=="HOLD":

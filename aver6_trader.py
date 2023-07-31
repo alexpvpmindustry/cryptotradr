@@ -145,6 +145,7 @@ def strat_tpsl3(enter_data,strat_data,cur_price):# only HOLD or SELL
         strat_data["cur_sl"] = 0.008
         strat_data["cur_tp"] = 0.028
         strat_data["shiftSureProfit"]=True
+        strat_data["rolling_price"]=cur_price
     elif cur_price > (strat_data["rolling_price"]*(1+nextlvlincrease)):
         #( (1+strat_data["cur_sl"]+width*0.55)*enter_price ): # shifts up by 0.55*4%-2% =0.2% from center point
         strat_data["cur_sl"] =  (cur_price-enter_price)/enter_price-0.005
