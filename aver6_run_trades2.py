@@ -67,5 +67,8 @@ rand_emoji = f"{get_random_emoji()}{get_random_emoji()}{get_random_emoji()}"
 
 ping(ERROR_PING2,f"new run {ddtn},{rand_emoji}")
 loop = asyncio.get_event_loop() 
+print("starting event loop")
 for idd,s in enumerate(subset_symbols[:]):
     asyncio.run_coroutine_threadsafe(main(s+"USDT",idd), loop)
+loop.run_forever()
+print("ending loop")
