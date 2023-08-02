@@ -10,8 +10,9 @@ from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CR
 import traceback
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
-master_list=[[None] for _ in subset_symbols[:]]
-master_list_status=["1111" for _ in subset_symbols[:]]
+maxsymbols=10
+master_list=[[None] for _ in subset_symbols[:maxsymbols]]
+master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
 async def main(symbol='BNBBTC',idd=0):
     global master_list ,MOMENTUM_count,master_list_status
@@ -58,10 +59,10 @@ async def main(symbol='BNBBTC',idd=0):
             except Exception as e:
                 strr=traceback.format_exc()
                 print("ERROR",symbol,e,str(e))
-                ping(ERROR_PING2,f"MOMENT error {symbol} {ALEXPING} "+str(e)+"  "+strr)
+                ping(ERROR_PING2,f"MOMENT error {symbol} {ALEXPING} "+str(e)+"  "+strr+f" dfloc0{dfloc0} dfloc1{dfloc1}")
                 break
     await client.close_connection()
-    print(f"ended {symbol}")
+    print(f"ended {symbol}") 
 
 ddtn=datetime.datetime.now()
 rand_emoji = f"{get_random_emoji()}{get_random_emoji()}{get_random_emoji()}"
@@ -69,7 +70,7 @@ rand_emoji = f"{get_random_emoji()}{get_random_emoji()}{get_random_emoji()}"
 ping(ERROR_PING2,f"new run {ddtn},{rand_emoji}")
 loop = asyncio.get_event_loop() 
 print("starting event loop")
-for idd,s in enumerate(subset_symbols[:]):
+for idd,s in enumerate(subset_symbols[:maxsymbols]):
     asyncio.run_coroutine_threadsafe(main(s+"USDT",idd), loop)
 loop.run_forever()
 print("ending loop")
