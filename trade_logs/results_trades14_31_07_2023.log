@@ -1,0 +1,4 @@
+WANUSDT,5m,open0.2457,closeprice0.2455,dfname2023-07-31_14:40:00,starttime2023-07-31_14:44:56.66,exittime14:46:49.39,exitreasonReason: StopLoss0.03%,postypeJUMP2POS,critStrcritFAIL(2.5%&30%) critGain=`1.75%`, critPlBk=`30.00%`
+VGXUSDT,5m,open0.1947,closeprice0.1971,dfname2023-07-31_15:25:00,starttime2023-07-31_15:29:58.85,exittime15:33:19.29,exitreasonReason: StopLoss1.71%,postypeJUMP3POS,critStrcritPASS critGain=`4.35%`, critPlBk=`10.99%`
+BAKEUSDT,5m,open0.0996,closeprice0.1003,dfname2023-07-31_15:40:00,starttime2023-07-31_15:44:55.29,exittime15:48:30.53,exitreasonReason: StopLoss0.80%,postypeJUMP4POS,critStrcritFAIL(2.5%&30%) critGain=`1.12%`, critPlBk=`31.25%`
+BAKEUSDT,5m,open0.1005,closeprice0.1004,dfname2023-07-31_16:15:00,starttime2023-07-31_16:19:58.44,exittime16:21:25.54,exitreasonReason: StopLoss0.10%,postypeJUMP2POS,critStrcritFAIL(2.5%&30%) critGain=`0.90%`, critPlBk=`35.71%`

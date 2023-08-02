@@ -1,0 +1,2 @@
+BURGERUSDT,5m,open0.3971,closeprice0.4015,dfname2023-07-31_17:10:00,starttime2023-07-31_17:14:58.75,exittime17:21:07.62,exitreasonReason: StopLoss1.06%,postypeJUMP4POS,critStrcritFAIL(2.5%&30%) critGain=`1.04%`, critPlBk=`10.87%`
+BURGERUSDT,5m,open0.4038,closeprice0.3949,dfname2023-07-31_17:15:00,starttime2023-07-31_17:19:57.90,exittime17:38:34.24,exitreasonReason: StopLoss-2.00%,postypeJUMP2POS,critStrcritFAIL(2.5%&30%) critGain=`1.51%`, critPlBk=`7.69%`
