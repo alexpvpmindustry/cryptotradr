@@ -10,7 +10,7 @@ from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CR
 import traceback
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
-maxsymbols=10
+maxsymbols=-1
 master_list=[[None] for _ in subset_symbols[:maxsymbols]]
 master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
@@ -39,7 +39,7 @@ async def main(symbol='BNBBTC',idd=0):
                     prev_df = df.copy()
                     if len(master_list[idd])>2:
                         master_list[idd].pop(0)
-                        if (master_list[idd][0] is not None) and (master_list[idd][1] is not None):
+                        if (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None):
                             # work on master_list since it has the latest dataset
                             dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
