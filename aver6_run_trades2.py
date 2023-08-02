@@ -7,7 +7,7 @@ from collections import Counter
 import pickle
 import subprocess
 from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
-
+import traceback
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
 master_list=[[None] for _ in subset_symbols[:]]
@@ -56,8 +56,9 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
-                print(symbol,e,str(e))
-                ping(ERROR_PING2,f"MOMENT error {symbol} {ALEXPING} "+str(e))
+                strr=traceback.format_exc()
+                print("ERROR",symbol,e,str(e))
+                ping(ERROR_PING2,f"MOMENT error {symbol} {ALEXPING} "+str(e)+"  "+strr)
                 break
     await client.close_connection()
     print(f"ended {symbol}")
