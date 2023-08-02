@@ -38,7 +38,7 @@ async def main(symbol='BNBBTC',idd=0):
                     prev_df = df.copy()
                     if len(master_list[idd])>2:
                         master_list[idd].pop(0)
-                        if master_list[idd][0] is not None:
+                        if (master_list[idd][0] is not None) and (master_list[idd][1] is not None):
                             # work on master_list since it has the latest dataset
                             dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
