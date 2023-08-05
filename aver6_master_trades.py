@@ -1,7 +1,7 @@
 import datetime,time,sys
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results 
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
-
+import time
 symbol=""
 interval=""
         
@@ -41,6 +41,7 @@ try:
         else:
             ping(CRYPTO_SIGNALS2,f"ENTER ERROR {symbol}{emoji} {SIGNALROLE}")
             assert False
+        enter_time_time = time.time()
         # continous loop until exit or sell signal is recieved
         status="HOLD"
         loopcounts=1
@@ -51,8 +52,8 @@ try:
         strat_data = {"cur_sl":sl,"cur_tp":tp,"slip":-0.002,"ent_sl":sl,"ent_tp":tp,
                       "strat":"strat_tpsl3","shiftSureProfit":False,"Highs":cur_price,"Lows":cur_price,"rolling_price":cur_price}
 
-        stdmean_status="HOLD"
-        stdmean_status_exited=False
+        nextcandle_status="HOLD"
+        nextcandle_status_exited=False
         pas_status="HOLD"
         pas_strr=""
         
@@ -66,7 +67,9 @@ try:
                 strr_="🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}`"
                 strr_+=f" CurPri`{cur_price:{price_format}}` "+pas_strr+f" ({timenow})"
                 ping(CRYPTO_SIGNALS2,strr_)
-            status ="HOLD" if ((stdmean_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
+            if (time.time() - enter_time_time)/60 >1:# more than 1minute has passed!
+                nextcandle_status="SELL"
+            status ="HOLD" if ((nextcandle_status=="HOLD") and (pas_status=="HOLD")) else "SELL"
             loopcounts+=1
             if status=="HOLD":
                 time.sleep(5)
@@ -89,9 +92,9 @@ try:
             if pas_status=="SELL":
                 strr+= f"Reason: {pas_strr}\n"
                 reason+=f"Reason: {pas_strr}"
-            if stdmean_status!="HOLD":
-                strr+= "Reason: Exit signal from PAS\n"
-                reason+="Reason: Exit signal from PAS"
+            if nextcandle_status!="HOLD":
+                strr+= "Reason: Exit signal from next candle\n"
+                reason+="Reason: Exit signal from next candle"
             ping(CRYPTO_SIGNALS2,strr)
             ping(CRYPTO_LOGS2,strr)
             log_trade_results(symbol,interval,enter_data['price'],cur_price,

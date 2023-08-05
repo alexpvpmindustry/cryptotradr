@@ -45,7 +45,7 @@ async def main(symbol='BNBBTC',idd=0):
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
-                            if v0>1e6 and v1>1e6 and g0<-0.006 and g1<-0.006:
+                            if v0>2689655 and v1>4379310 and g0<-0.0068965 and g1<-0.001724:
                                 #BUY signal!
                                 cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MOMENTU3",f"{MOMENTUM_count}"]
