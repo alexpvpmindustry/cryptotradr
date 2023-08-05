@@ -68,6 +68,10 @@ ddtn=datetime.datetime.now()
 rand_emoji = f"{get_random_emoji()}{get_random_emoji()}{get_random_emoji()}"
 
 ping(ERROR_PING2,f"new run {ddtn},{rand_emoji}")
+ping(STATUS_PING2,f"new run {ddtn},{rand_emoji}")
+ping(CRYPTO_SIGNALS2,f"new run {ddtn},{rand_emoji}")
+ping(CRYPTO_LOGS2,f"new run {ddtn},{rand_emoji}")
+
 loop = asyncio.get_event_loop() 
 print("starting event loop")
 for idd,s in enumerate(subset_symbols[:maxsymbols]):
