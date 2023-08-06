@@ -45,15 +45,24 @@ async def main(symbol='BNBBTC',idd=0):
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
-                            if v0>2689655 and v1>4379310 and g0<-0.0068965 and g1<-0.001724:
+                            paramsWin = (-0.00689655,-0.00862069,1000000,2689655) # high%win params
+                            paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
+                            if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
-                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MOMENTU3",f"{MOMENTUM_count}"]
+                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
+                                cmd = " ".join(cmd)
+                                subprocess.Popen( cmd , shell=True)
+                                MOMENTUM_count+=1
+                            elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
+                                #BUY signal!
+                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
+                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
                             if idd==0:
-                                strr=f"MOMENTUM {str(datetime.datetime.now())[:-4]},"
+                                strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
