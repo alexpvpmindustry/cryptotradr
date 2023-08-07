@@ -68,7 +68,7 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
-                            elif random.randint(0,350)==0:
+                            elif random.randint(0,250)==0:
                                 strr=f"update {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]} {g0:.3%}{g1:.3%}{v0:.3g}{v1:.3g} "
                                 ping(STATUS_PING2,strr)
