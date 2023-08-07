@@ -68,9 +68,9 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
-                            elif random.randint(0,250)==0:
+                            if (random.randint(0,250)==0) or (g0<-0.003 and g1<-0.003 and v0>1e5 and v1>1e5):
                                 strr=f"update {str(datetime.datetime.now())[:-4]},"
-                                strr+=f"{subset_symbols[idd]} {g0:.3%}{g1:.3%}{v0:.3g}{v1:.3g} "
+                                strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
                 strr=traceback.format_exc()
