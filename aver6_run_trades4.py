@@ -60,15 +60,11 @@ async def main(symbol='BNBBTC',idd=0):
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                             if idd==0:
                                 strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
+                                lowG="nothing"
                                 try:
-                                    arrr = np.asarray(master_list_gains)
-                                    lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
-                                    lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
-                                except ValueError or IndexError:
-                                    try:
-                                        lowG=f"error{g0:.2%}{g1:.2%}"
-                                    except IndexError:
-                                        lowG=f"g0,{g0},g1,{g1}"
+                                    lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1}"
+                                except ValueError or IndexError as e:
+                                    lowG=str(e)
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
