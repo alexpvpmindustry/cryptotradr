@@ -62,9 +62,11 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
                                 lowG="nothing"
                                 try:
-                                    lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1}"
+                                    arrr = np.asarray(master_list_gains)
+                                    lowG= f"g0{min(arrr[:,0]):.4%}({subset_symbols[np.argmin(arrr[:,0])]}),"
+                                    lowG+=f"g1{min(arrr[:,1]):.4%}({subset_symbols[np.argmin(arrr[:,1])]})."
                                 except ValueError or IndexError as e:
-                                    lowG=str(e)
+                                    lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1} error {str(e)}"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
