@@ -44,7 +44,7 @@ async def main(symbol='BNBBTC',idd=0):
                         master_list[idd].pop(0) 
                         if (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None):
                             # work on master_list since it has the latest dataset
-                            dfloc0 = master_list[idd][0].values;dfloc1=master_list[idd][1].values
+                            dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
@@ -59,14 +59,16 @@ async def main(symbol='BNBBTC',idd=0):
                                 MOMENTUM_count+=1 
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                             if idd==0:
-                                await asyncio.sleep(5)
                                 strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
                                 try:
                                     arrr = np.asarray(master_list_gains)
                                     lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
                                     lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
                                 except ValueError or IndexError:
-                                    lowG=f"error{g0:.2%}{g1:.2%}"
+                                    try:
+                                        lowG=f"error{g0:.2%}{g1:.2%}"
+                                    except IndexError:
+                                        lowG=f"g0,{g0},g1,{g1}"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
