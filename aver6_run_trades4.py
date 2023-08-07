@@ -14,7 +14,7 @@ with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
 maxsymbols=-1
 master_list=[[None] for _ in subset_symbols[:maxsymbols]]
-master_list_gains=[[None] for _ in subset_symbols[:maxsymbols]]
+master_list_gains=[[0,0] for _ in subset_symbols[:maxsymbols]]
 master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
 async def main(symbol='BNBBTC',idd=0):
@@ -38,21 +38,17 @@ async def main(symbol='BNBBTC',idd=0):
                     ress=res["k"]
                     df = [ress["t"],float(ress["o"]),float(ress["c"]),float(ress["v"])] 
                     master_list[idd].append(prev_df.copy())
-                    master_list_status[idd]=prev
-                    if len(prev_df)==1:
-                        master_list_gains[idd].append( 0 )
-                    else:
-                        master_list_gains[idd].append( (prev_df[2]-prev_df[1])/prev_df[1] )
+                    master_list_status[idd]=prev 
                     prev_df = df.copy()
                     if len(master_list[idd])>2:
-                        master_list[idd].pop(0)
-                        master_list_gains[idd].pop(0)
+                        master_list[idd].pop(0) 
                         if (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None):
                             # work on master_list since it has the latest dataset
                             dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
+                            master_list_gains[idd]=(g0,g1)
                             paramsWin = (-0.002,-0.002,1e6,1e6) # test params, should have 10 trades per day
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
