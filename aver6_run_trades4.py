@@ -25,6 +25,7 @@ async def main(symbol='BNBBTC',idd=0):
     ts = bm.kline_socket(symbol, interval=KLINE_INTERVAL_1MINUTE) 
     print(f"sub{idd}",end=" ")
     prev="0000";prev_df=[None]
+    last_updated="0001"
     async with ts as tscm:
         while True:
             try:
@@ -58,17 +59,22 @@ async def main(symbol='BNBBTC',idd=0):
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1 
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                            if idd==0:
-                                strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
-                                lowG="nothing"
-                                try:
-                                    arrr = np.asarray(master_list_gains)
-                                    lowG= f"g0{min(arrr[:,0]):.4%}({subset_symbols[np.argmin(arrr[:,0])]}),"
-                                    lowG+=f"g1{min(arrr[:,1]):.4%}({subset_symbols[np.argmin(arrr[:,1])]})."
-                                except ValueError or IndexError as e:
-                                    lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1} error {str(e)}"
-                                strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
-                                ping(STATUS_PING2,strr)
+                if (idd==0) and (last_updated!=prev) and (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None): 
+                    if len(Counter(master_list_status).keys())==1:
+                        # everything is in sync, use this dataset
+                        strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
+                        lowG="nothing"
+                        try:
+                            arrr = np.asarray(master_list_gains)
+                            lowest_idd_prev = np.argmin(arrr[:,0])
+                            lowest_idd_now = np.argmin(arrr[:,1])
+                            lowG= f"prev g0{arrr[lowest_idd_prev,0]:.4%}g1{arrr[lowest_idd_prev,1]}({subset_symbols[lowest_idd_prev]}),"
+                            lowG+=f"now g0{arrr[lowest_idd_now,0]:.4%}g1{arrr[lowest_idd_now,1]}({subset_symbols[lowest_idd_now]})."
+                        except ValueError or IndexError as e:
+                            lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1} error {str(e)}"
+                        strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
+                        ping(STATUS_PING2,strr)
+                        last_updated=prev
             except Exception as e:
                 strr=traceback.format_exc()
                 print("ERROR",symbol,e,str(e))
