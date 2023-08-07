@@ -69,8 +69,8 @@ async def main(symbol='BNBBTC',idd=0):
                                     arrr = np.asarray(master_list_gains)
                                     lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
                                     lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
-                                except ValueError:
-                                    lowG="empty"
+                                except ValueError or IndexError:
+                                    lowG=f"error{g0:.2%}{g1:.2%}"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
