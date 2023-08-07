@@ -59,7 +59,7 @@ async def main(symbol='BNBBTC',idd=0):
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1 
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                if (idd==0) and (last_updated!=prev) and (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None): 
+                if (idd==0) and (last_updated!=prev) and (len(master_list[idd])>2) and (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None): 
                     if len(Counter(master_list_status).keys())==1:
                         # everything is in sync, use this dataset
                         strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
