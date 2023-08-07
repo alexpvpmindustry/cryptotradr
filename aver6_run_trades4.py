@@ -71,7 +71,7 @@ async def main(symbol='BNBBTC',idd=0):
                             lowG= f"prev g0{arrr[lowest_idd_prev,0]:.4%}g1{arrr[lowest_idd_prev,1]}({subset_symbols[lowest_idd_prev]}),"
                             lowG+=f"now g0{arrr[lowest_idd_now,0]:.4%}g1{arrr[lowest_idd_now,1]}({subset_symbols[lowest_idd_now]})."
                         except ValueError or IndexError as e:
-                            lowG=f"g0,{g0},g1,{g1},v0,{v0},v1,{v1} error {str(e)}"
+                            lowG=f"error {str(e)}"
                         strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                         ping(STATUS_PING2,strr)
                         last_updated=prev
