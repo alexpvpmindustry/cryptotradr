@@ -8,6 +8,7 @@ import pickle
 import subprocess
 from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
 import traceback
+import random
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
 maxsymbols=-1
@@ -66,6 +67,10 @@ async def main(symbol='BNBBTC',idd=0):
                             if idd==0:
                                 strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
+                                ping(STATUS_PING2,strr)
+                            elif random.randint(0,350)==0:
+                                strr=f"update {str(datetime.datetime.now())[:-4]},"
+                                strr+=f"{subset_symbols[idd]} {g0:.3%}{g1:.3%}{v0:.3g}{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
                 strr=traceback.format_exc()
