@@ -63,10 +63,14 @@ async def main(symbol='BNBBTC',idd=0):
                                 MOMENTUM_count+=1 
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                             if idd==0:
+                                await asyncio.sleep(5)
                                 strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
-                                arrr = np.asarray(master_list_gains)
-                                lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
-                                lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
+                                try:
+                                    arrr = np.asarray(master_list_gains)
+                                    lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
+                                    lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
+                                except ValueError:
+                                    lowG="empty"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
