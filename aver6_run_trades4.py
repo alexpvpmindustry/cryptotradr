@@ -8,10 +8,13 @@ import pickle
 import subprocess
 from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
 import traceback
+import numpy as np
+
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
 maxsymbols=-1
 master_list=[[None] for _ in subset_symbols[:maxsymbols]]
+master_list_gains=[[None] for _ in subset_symbols[:maxsymbols]]
 master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
 async def main(symbol='BNBBTC',idd=0):
@@ -36,45 +39,43 @@ async def main(symbol='BNBBTC',idd=0):
                     df = [ress["t"],float(ress["o"]),float(ress["c"]),float(ress["v"])] 
                     master_list[idd].append(prev_df.copy())
                     master_list_status[idd]=prev
+                    if len(prev_df)==1:
+                        master_list_gains[idd].append( 0 )
+                    else:
+                        master_list_gains[idd].append( (prev_df[2]-prev_df[1])/prev_df[1] )
                     prev_df = df.copy()
                     if len(master_list[idd])>2:
                         master_list[idd].pop(0)
+                        master_list_gains[idd].pop(0)
                         if (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None):
                             # work on master_list since it has the latest dataset
                             dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
                             v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
-                            paramsWin = (-0.00689655,-0.00862069,1000000,2689655) # high%win params
-                            paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
+                            paramsWin = (-0.002,-0.002,1e6,1e6) # test params, should have 10 trades per day
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
-                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
+                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_test",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
-                                MOMENTUM_count+=1
-                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                            elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
-                                #BUY signal!
-                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
-                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
-                                cmd = " ".join(cmd)
-                                subprocess.Popen( cmd , shell=True)
-                                MOMENTUM_count+=1
+                                MOMENTUM_count+=1 
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                             if idd==0:
-                                strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
-                                strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
+                                strr=f"MOMENT test {str(datetime.datetime.now())[:-4]},"
+                                arrr = np.asarray(master_list_gains)
+                                lowG = f"lowG={np.min(arrr[:,0]):.2%},{subset_symbols[np.argmin(arrr[:,0])[0]]:.2%},"
+                                lowG+= f"{np.min(arrr[:,1]):.2%},{subset_symbols[np.argmin(arrr[:,1])[0]]:.2%}."
+                                strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count},{lowG}"
                                 ping(STATUS_PING2,strr)
             except Exception as e:
                 strr=traceback.format_exc()
                 print("ERROR",symbol,e,str(e))
-                ping(ERROR_PING2,f"MOMENT3 error {symbol} {ALEXPING} "+str(e)+"  "+strr+f" dfloc0{dfloc0} dfloc1{dfloc1}")
+                ping(ERROR_PING2,f"MOMENT test error {symbol} {ALEXPING} "+str(e)+"  "+strr+f" dfloc0{dfloc0} dfloc1{dfloc1}")
                 break
     await client.close_connection()
     print(f"ended {symbol}") 
-
 def ddtn_str():
     return str(datetime.datetime.now())[:-4]
 def signal_enter_position(symbol,closeprice,dfname):
