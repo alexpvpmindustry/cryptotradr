@@ -11,7 +11,7 @@ import traceback
 import random
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
-maxsymbols=-1
+maxsymbols=len(subset_symbols)
 master_list=[[None] for _ in subset_symbols[:maxsymbols]]
 master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
@@ -48,28 +48,44 @@ async def main(symbol='BNBBTC',idd=0):
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
                             paramsWin = (-0.00689655,-0.00862069,1000000,2689655) # high%win params
                             paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
+                            paramsValidate = (-0.003,-0.003,268965,437310) #lowSD 
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
+                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                                 cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
-                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
+                                
                             elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
                                 #BUY signal!
+                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                                 cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
+                                
+                            elif  g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]:
+                                #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
+                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
+                                       "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}"]
+                                cmd = " ".join(cmd)
+                                subprocess.Popen( cmd , shell=True)
+                                MOMENTUM_count+=1
+                                
                             if idd==0:
                                 strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
-                            if (random.randint(0,250)==0) or (g0<-0.003 and g1<-0.003 and v0>1e5 and v1>1e5):
-                                strr=f"update {str(datetime.datetime.now())[:-4]},"
+                            if (random.randint(0,250)==0):
+                                strr=f"update rand250 {str(datetime.datetime.now())[:-4]},"
+                                strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
+                                ping(STATUS_PING2,strr)
+                            if  (g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]):
+                                strr=f"update validate {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
