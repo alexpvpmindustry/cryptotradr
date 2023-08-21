@@ -84,8 +84,8 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"update rand250 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
-                            if  (g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]):
-                                strr=f"update validate {str(datetime.datetime.now())[:-4]},"
+                            if  (v0>5000 and v1>5000):
+                                strr=f"update V5k V5k {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
