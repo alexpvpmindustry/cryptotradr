@@ -30,11 +30,12 @@ async def main(symbol='BNBBTC',idd=0):
                 if res["e"]=="error":
                     print(str(datetime.datetime.now())[11:-4],res)
                     raise Exception(res) 
-                if prev != str(res["k"]["T"])[6:-3]: # a new change, so append the prev_df into the master_list
+                ress=res["k"] 
+                df = [ress["t"],float(ress["o"]),float(ress["c"]),float(ress["v"]),float(ress["q"])] 
+                if prev==str(res["k"]["T"])[6:-3]:
+                    prev_df = df.copy()
+                else:#if prev != str(res["k"]["T"])[6:-3]: # a new change, so append the prev_df into the master_list
                     prev = str(res["k"]["T"])[6:-3]
-                    
-                    ress=res["k"]
-                    df = [ress["t"],float(ress["o"]),float(ress["c"]),float(ress["v"])] 
                     master_list[idd].append(prev_df.copy())
                     master_list_status[idd]=prev
                     prev_df = df.copy()
@@ -43,12 +44,12 @@ async def main(symbol='BNBBTC',idd=0):
                         if (master_list[idd][0][0] is not None) and (master_list[idd][1][0] is not None):
                             # work on master_list since it has the latest dataset
                             dfloc0 = master_list[idd][0];dfloc1=master_list[idd][1]
-                            v0 = dfloc0[1]*dfloc0[3];v1 = dfloc1[1]*dfloc1[3];
+                            v0 = dfloc0[4];v1 = dfloc1[4]
                             g0 = (dfloc0[2]-dfloc0[1])/dfloc0[1]
                             g1 = (dfloc1[2]-dfloc1[1])/dfloc1[1]
                             paramsWin = (-0.00689655,-0.00862069,1000000,2689655) # high%win params
                             paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
-                            paramsValidate = (-0.003,-0.003,268965,437310) #lowSD 
+                            paramsValidate = (-0.003,-0.003,1268965,1437310) #lowSD 
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
@@ -84,8 +85,8 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"update rand250 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
-                            if  (v0>5000 and v1>5000):
-                                strr=f"update V5k V5k {str(datetime.datetime.now())[:-4]},"
+                            if  (v0>50000 and v1>50000):
+                                strr=f"update V50k V50k {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
