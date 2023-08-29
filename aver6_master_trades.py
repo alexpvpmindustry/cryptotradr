@@ -1,4 +1,5 @@
 import datetime,time,sys
+import traceback
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results 
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
 import time
@@ -105,5 +106,6 @@ try:
     else:
         ping(CRYPTO_SIGNALS2,f"Entry price too high, skipping  trade. {symbol}{interval} curr`{cur_price:{price_format}}`")
 except Exception as e:
-    ping(ERROR_PING2,f"error  {symbol}{interval} {ALEXPING}"+str(e))
+    strr=traceback.format_exc()
+    ping(ERROR_PING2,f"error 108 {symbol}{interval} {ALEXPING} str{str(e)} tb: {strr}")
     raise

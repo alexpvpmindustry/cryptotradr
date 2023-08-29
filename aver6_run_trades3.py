@@ -50,10 +50,11 @@ async def main(symbol='BNBBTC',idd=0):
                             paramsWin = (-0.00689655,-0.00862069,1000000,2689655) # high%win params
                             paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
                             paramsValidate = (-0.003,-0.003,1268965,1437310) #lowSD 
+                            dtn_str = str(datetime.datetime.now())[:-4].replace(" ","_")
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"15",dtn_str,
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -62,7 +63,7 @@ async def main(symbol='BNBBTC',idd=0):
                             elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"15",dtn_str,
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -71,7 +72,7 @@ async def main(symbol='BNBBTC',idd=0):
                             elif  g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol,"15",str(datetime.datetime.now())[:-4],
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"15",dtn_str,
                                        "TEST",f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -81,12 +82,12 @@ async def main(symbol='BNBBTC',idd=0):
                                 strr=f"MOMENT3 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"sync{Counter(master_list_status)}, opos={MOMENTUM_count}"
                                 ping(STATUS_PING2,strr)
-                            if (random.randint(0,450)==0):
-                                strr=f"update rand450 {str(datetime.datetime.now())[:-4]},"
+                            if (random.randint(0,550)==0):
+                                strr=f"    upd rand550 {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
                             if  (v0>1000_000 and v1>1_000_000):
-                                strr=f"update V1M V1M {str(datetime.datetime.now())[:-4]},"
+                                strr=f"    upd V1M V1M {str(datetime.datetime.now())[:-4]},"
                                 strr+=f"{subset_symbols[idd]},{g0:.3%},{g1:.3%},v0,{v0:.3g},v1,{v1:.3g} "
                                 ping(STATUS_PING2,strr)
             except Exception as e:
@@ -101,7 +102,7 @@ def ddtn_str():
     return str(datetime.datetime.now())[:-4]
 def signal_enter_position(symbol,closeprice,dfname):
     xx = closeprice
-    strr = f"`{symbol}` BUY `{xx}`" 
+    strr = f"`{symbol}` BUY `{xx}` " 
     #strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}` {pos_type}\n"
     strr += f"`{dfname}` (`{ddtn_str()}`) {SIGNALROLE}"
     #write_signal(symbol,self.interval,signal="ENTER",closeprice=xx,dfname=dfname) 
