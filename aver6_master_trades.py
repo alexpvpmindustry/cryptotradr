@@ -77,7 +77,10 @@ try:
 
         # sell position
         a1,a2,a3 = market_trade(symbol,qty,buy=False,test=test)
-        cur_price = get_current_price(symbol)# to simulate current sell price #TODO fix this for real sells
+        if test:
+            cur_price = get_current_price(symbol)
+        else:
+            cur_price = float(a2[0]["price"]) # but this should actually be the weighted average
         exittime=str(datetime.datetime.now())[11:-4]
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
