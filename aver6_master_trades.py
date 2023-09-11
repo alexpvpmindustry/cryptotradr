@@ -24,12 +24,14 @@ try:
     interval="5m"
     passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
     passed="critPASS" if passed_criteria else "critFAIL(2.5%&30%)"
-    critStr = f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
+    critStr = "_" #no use for this f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
     buytimestr=""
 
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
+        if not test and a1=="FILLED":
+            cur_price=float(a2[0]["price"])
         emoji=get_random_emoji()
         strr =f"`{symbol}`{emoji}, `{cur_price:{price_format}}` {pos_type} `Trd{pos_number}` {critStr}"
         buytimestr=str(datetime.datetime.now())[:-4]
