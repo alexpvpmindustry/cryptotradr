@@ -21,7 +21,7 @@ try:
     sl=-0.005
     tp=0.015
     hl_pairs=None
-    interval="5m"
+    interval="1m"
     passed_criteria = (criteria_gain>0.025) and (criteria_pullback<0.3)
     passed="critPASS" if passed_criteria else "critFAIL(2.5%&30%)"
     critStr = "_" #no use for this f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
