@@ -72,7 +72,7 @@ async def main(symbol='BNBBTC',idd=0):
                             elif  g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"1500",dtn_str,"TEST",
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"16",dtn_str,"LIVE",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
