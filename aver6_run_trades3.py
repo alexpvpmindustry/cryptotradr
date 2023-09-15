@@ -54,7 +54,7 @@ async def main(symbol='BNBBTC',idd=0):
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"LIVE",
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"TEST",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -63,7 +63,7 @@ async def main(symbol='BNBBTC',idd=0):
                             elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"LIVE",
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"TEST",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -72,7 +72,7 @@ async def main(symbol='BNBBTC',idd=0):
                             elif  g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"16",dtn_str,"LIVE",
+                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"16",dtn_str,"TEST",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
