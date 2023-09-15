@@ -39,6 +39,7 @@ try:
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
         qty = "{:0.0{}f}".format(qty, pricePrecision)
+        print("qty",qty,"test",test)
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         if not test and a1=="FILLED":
             cur_price=float(a2[0]["price"])
