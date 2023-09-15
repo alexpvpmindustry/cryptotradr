@@ -89,6 +89,8 @@ try:
                 time.sleep(5)
 
         # sell position
+        qty = qty*0.9985 # sell off the remaining 99.85% ... 
+        # 0.1% is for transaction fee 0.05% is for safety
         a1,a2,a3 = market_trade(symbol,qty,buy=False,test=test)
         if test:
             cur_price = get_current_price(symbol)
