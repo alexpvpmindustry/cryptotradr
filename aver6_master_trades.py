@@ -1,6 +1,7 @@
 import datetime,time,sys
 import traceback
-from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results 
+from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results
+from aver6_trader import client as cc
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
 import time
 symbol=""
@@ -18,6 +19,14 @@ try:
     pos_number = int(sys.argv[9])
     cur_price = get_current_price(symbol,sell=False)
     price_format=".6g"
+    # get precision from exchange
+    info = cc.get_exchange_info()
+    pricePrecision=8
+    for idxx,symbol_ in enumerate(info["symbols"]):
+        if symbol == info["symbols"][idxx]["symbol"]:
+            pricePrecision = info['symbols'][idxx]['quotePrecision']
+    
+    #
     sl=-0.005
     tp=0.015
     hl_pairs=None
@@ -29,6 +38,7 @@ try:
 
     if (cur_price-closeprice)/closeprice<0.009: 
         qty = qtyUSD/cur_price
+        qty = "{:0.0{}f}".format(qty, pricePrecision)
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         if not test and a1=="FILLED":
             cur_price=float(a2[0]["price"])
