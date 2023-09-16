@@ -1,6 +1,6 @@
 import asyncio
 from binance import AsyncClient, BinanceSocketManager
-from binance.enums import *
+from binance.enums import KLINE_INTERVAL_1MINUTE
 import time
 import datetime
 from collections import Counter
