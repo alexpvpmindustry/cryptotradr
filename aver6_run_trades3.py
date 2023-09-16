@@ -9,12 +9,24 @@ import subprocess
 from disc_api import ALEXPING, get_random_emoji, ping,STATUS_PING2,SIGNALROLE,CRYPTO_SIGNALS2,ERROR_PING2,CRYPTO_LOGS2
 import traceback
 import random
+from aver6_trader import client as cc
+
 with open("9_0_subset_symbols_24hrchange.pkl","rb") as f:
     subset_symbols = pickle.load(f)
 maxsymbols=len(subset_symbols)
 master_list=[[None] for _ in subset_symbols[:maxsymbols]]
 master_list_status=["1111" for _ in subset_symbols[:maxsymbols]]
 MOMENTUM_count=0
+
+exchange_info = cc.get_exchange_info()
+
+def get_step_size(symbol): # symbol is without USDT
+    symbolUSDT = symbol+"USDT"
+    for sym in exchange_info['symbols']:
+        if sym["symbol"]==symbolUSDT: # 
+            return float(sym['filters'][1]['stepSize'])
+    raise Exception("no symbol found in exchange info")
+
 async def main(symbol='BNBBTC',idd=0):
     global master_list ,MOMENTUM_count,master_list_status
     await asyncio.sleep(idd*0.25)
@@ -51,11 +63,12 @@ async def main(symbol='BNBBTC',idd=0):
                             paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
                             paramsValidate = (-0.003,-0.003,1268965,1437310) #lowSD 
                             dtn_str = str(datetime.datetime.now())[:-4].replace(" ","_")
+                            step_size = get_step_size(symbol)
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                                 cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"TEST",
-                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}"]
+                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
@@ -64,7 +77,7 @@ async def main(symbol='BNBBTC',idd=0):
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                                 cmd = ["python","aver6_master_trades.py",symbol[:-4],"100",dtn_str,"TEST",
-                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}"]
+                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
@@ -73,7 +86,7 @@ async def main(symbol='BNBBTC',idd=0):
                                 #BUY signal!
                                 signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
                                 cmd = ["python","aver6_master_trades.py",symbol[:-4],"16",dtn_str,"TEST",
-                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}"]
+                                       f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
