@@ -1,7 +1,6 @@
 import asyncio
 from binance import AsyncClient, BinanceSocketManager
 from binance.enums import KLINE_INTERVAL_1MINUTE
-import time
 import datetime
 from collections import Counter
 import pickle
@@ -20,19 +19,18 @@ MOMENTUM_count=0
 
 exchange_info = cc.get_exchange_info()
 
-def get_step_size(symbol): # symbol is without USDT
-    symbolUSDT = symbol+"USDT"
+def get_step_size(symbolUSDT): # symbol is with USDT 
     for sym in exchange_info['symbols']:
         if sym["symbol"]==symbolUSDT: # 
             return float(sym['filters'][1]['stepSize'])
     raise Exception("no symbol found in exchange info")
 
-async def main(symbol='BNBBTC',idd=0):
+async def main(symUSDT='BNBBTC',idd=0):
     global master_list ,MOMENTUM_count,master_list_status
     await asyncio.sleep(idd*0.25)
     client = await AsyncClient.create()
     bm = BinanceSocketManager(client) 
-    ts = bm.kline_socket(symbol, interval=KLINE_INTERVAL_1MINUTE) 
+    ts = bm.kline_socket(symUSDT, interval=KLINE_INTERVAL_1MINUTE) 
     print(f"sub{idd}",end=" ")
     prev="0000";prev_df=[None]
     async with ts as tscm:
@@ -63,29 +61,29 @@ async def main(symbol='BNBBTC',idd=0):
                             paramsLowSD = (-0.00689655,-0.00172414,2689655,4379310) #lowSD 
                             paramsValidate = (-0.003,-0.003,1268965,1437310) #lowSD 
                             dtn_str = str(datetime.datetime.now())[:-4].replace(" ","_")
-                            step_size = get_step_size(symbol)
+                            step_size = get_step_size(symUSDT)
                             if  g0<paramsWin[0] and g1<paramsWin[1] and v0>paramsWin[2] and v1>paramsWin[3]:
                                 #BUY signal!
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"30",dtn_str,"LIVE",
+                                cmd = ["python","aver6_master_trades.py",symUSDT[:-4],"30",dtn_str,"LIVE",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_WinPct",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
-                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
+                                signal_enter_position(symUSDT,dfloc1[2],dfname=str(datetime.datetime.now())[:-4],signal_type="MT_WinPct")
                                 
                             elif  g0<paramsLowSD[0] and g1<paramsLowSD[1] and v0>paramsLowSD[2] and v1>paramsLowSD[3]:
                                 #BUY signal!
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"30",dtn_str,"LIVE",
+                                cmd = ["python","aver6_master_trades.py",symUSDT[:-4],"30",dtn_str,"LIVE",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_LowSD",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
                                 MOMENTUM_count+=1
-                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
+                                signal_enter_position(symUSDT,dfloc1[2],dfname=str(datetime.datetime.now())[:-4],signal_type="MT_LowSD")
                                 
                             elif  g0<paramsValidate[0] and g1<paramsValidate[1] and v0>paramsValidate[2] and v1>paramsValidate[3]:
                                 #BUY signal!
-                                signal_enter_position(symbol,dfloc1[2],dfname=str(datetime.datetime.now())[:-4])
-                                cmd = ["python","aver6_master_trades.py",symbol[:-4],"16",dtn_str,"TEST",
+                                signal_enter_position(symUSDT,dfloc1[2],dfname=str(datetime.datetime.now())[:-4],signal_type="MT_Validate")
+                                cmd = ["python","aver6_master_trades.py",symUSDT[:-4],"16",dtn_str,"TEST",
                                        f"{dfloc1[2]:.6g}","-0.006","-0.006","MT_Validate",f"{MOMENTUM_count}",f"{step_size}"]
                                 cmd = " ".join(cmd)
                                 subprocess.Popen( cmd , shell=True)
@@ -105,19 +103,19 @@ async def main(symbol='BNBBTC',idd=0):
                                 ping(STATUS_PING2,strr)
             except Exception as e:
                 strr=traceback.format_exc()
-                print("ERROR",symbol,e,str(e))
-                ping(ERROR_PING2,f"MOMENT3 error {symbol} {ALEXPING} "+str(e)+"  "+strr+f" dfloc0{dfloc0} dfloc1{dfloc1}")
+                print("ERROR",symUSDT,e,str(e))
+                ping(ERROR_PING2,f"MOMENT3 error {symUSDT} {ALEXPING} "+str(e)+"  "+strr+f" dfloc0{dfloc0} dfloc1{dfloc1}")
                 break
     await client.close_connection()
-    print(f"ended {symbol}") 
+    print(f"ended {symUSDT}") 
 
 def ddtn_str():
     return str(datetime.datetime.now())[:-4]
-def signal_enter_position(symbol,closeprice,dfname):
+def signal_enter_position(symbol,closeprice,dfname,signal_type):
     xx = closeprice
     strr = f"`{symbol}` BUY `{xx}` " 
     #strr += f" tp `{xx*(1+self.tp):{self.price_format}}` sl `{xx*(1+self.sl):{self.price_format}}` {pos_type}\n"
-    strr += f"`{dfname}` (`{ddtn_str()}`) {SIGNALROLE}"
+    strr += f"`{dfname}` {signal_type} (`{ddtn_str()}`) {SIGNALROLE}"
     #write_signal(symbol,self.interval,signal="ENTER",closeprice=xx,dfname=dfname) 
     #enterdftime = str(dfname).replace(" ","_") 
     ping(CRYPTO_SIGNALS2,strr)
