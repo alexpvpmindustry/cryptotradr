@@ -1,9 +1,11 @@
-import datetime,time,sys
+import time
+# todo time all these functions to see how long they take to execute
+import datetime,sys
 import traceback
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results
-
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
-import time
+from binance.helpers import round_step_size
+
 symbol=""
 interval=""
         
@@ -16,17 +18,11 @@ try:
     criteria_gain=float(sys.argv[6])
     criteria_pullback=float(sys.argv[7])
     pos_type = sys.argv[8]
-    pos_number = int(sys.argv[9])
+    trd_number = int(sys.argv[9])
+    step_size = float(sys.argv[10])
     cur_price = get_current_price(symbol,sell=False)
     price_format=".6g"
-    # get precision from exchange
-    info = cc.get_exchange_info()
-    pricePrecision=8
-    for idxx,symbol_ in enumerate(info["symbols"]):
-        if symbol == info["symbols"][idxx]["symbol"]:
-            pricePrecision = info['symbols'][idxx]['quotePrecision']
-    
-    #
+
     sl=-0.005
     tp=0.015
     hl_pairs=None
@@ -36,15 +32,17 @@ try:
     critStr = "_" #no use for this f"{passed} critGain=`{criteria_gain:.2%}`, critPlBk=`{criteria_pullback:.2%}`"
     buytimestr=""
 
-    if (cur_price-closeprice)/closeprice<0.009: 
+    if (cur_price-closeprice)/closeprice<0.009: # 0.9% difference
         qty = qtyUSD/cur_price
-        qty = "{:0.0{}f}".format(qty, pricePrecision)
         print("qty",qty,"test",test)
+        if not test:
+            qty = round_step_size(qty,step_size)
+            print("qty_rounded",qty,"test",test)
         a1,a2,a3 = market_trade(symbol,qty,buy=True,test=test)
         if not test and a1=="FILLED":
             cur_price=float(a2[0]["price"])
         emoji=get_random_emoji()
-        strr =f"`{symbol}`{emoji}, `{cur_price:{price_format}}` {pos_type} `Trd{pos_number}` {critStr}"
+        strr =f"`{symbol}`{emoji}, `{cur_price:{price_format}}` {pos_type} `Trd{trd_number}` {critStr}"
         buytimestr=str(datetime.datetime.now())[:-4]
         strr+=f"\n `{dfname}` (`{buytimestr}`)"
         if a1=="FILLED":# we have entered the trade
@@ -78,7 +76,7 @@ try:
             pas_status,strat_data,pas_strr = price_action_signal(enter_data,strat_data,cur_price) 
             if pas_strr[:2]=="Up": # shifting of SLTP
                 timenow=str(datetime.datetime.now())[11:-4]
-                strr_="🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{pos_number}`"
+                strr_="🔄"+pas_status+f" `{symbol}{interval}` {emoji} {pos_type} `Trd{trd_number}`"
                 strr_+=f" CurPri`{cur_price:{price_format}}` "+pas_strr+f" ({timenow})"
                 ping(CRYPTO_SIGNALS2,strr_)
             if (time.time() - enter_time_time)/60 >1:# more than 1minute has passed!
@@ -89,8 +87,12 @@ try:
                 time.sleep(5)
 
         # sell position
-        qty = qty*0.9985 # sell off the remaining 99.85% ... 
+        qty = qty*0.9985 # sell off the remaining 99.85% ...
         # 0.1% is for transaction fee 0.05% is for safety
+        print("sell qty",qty,"test",test)
+        if not test:
+            qty = round_step_size(qty,step_size)
+            print("sell qty_rounded",qty,"test",test)
         a1,a2,a3 = market_trade(symbol,qty,buy=False,test=test)
         if test:
             cur_price = get_current_price(symbol)
@@ -100,7 +102,7 @@ try:
         if a1=="FILLED":# we have exited the trade
             change = (cur_price-enter_data['price'])/enter_data['price']
             sign = '⬆️' if change>0 else '⬇️'
-            strr = f"{sign}Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{pos_number}`\nCurPri`{cur_price:{price_format}}`,"
+            strr = f"{sign}Exited `{symbol}{interval}` {sign}{emoji},{pos_type} `Trd{trd_number}`\nCurPri`{cur_price:{price_format}}`,"
             strr+= f" entered at `{enter_data['price']:{price_format}}`, EntTime`{buytimestr}`,\n"
             strr+= f"(RESULT `{change:+.2%}`, `{qtyUSD*change:+.2f}$`) (ExitTime`{exittime}`)\n"
             highfrac=(strat_data['Highs']-enter_data['price'])/enter_data['price']
