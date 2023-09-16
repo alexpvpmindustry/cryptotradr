@@ -122,7 +122,7 @@ try:
             ping(ERROR_PING2,f"EXIT ERROR {emoji} {symbol}{interval} {ALEXPING}")
             raise
     else:
-        ping(CRYPTO_SIGNALS2,f"Entry price too high, skipping trade. {symbol}{interval} curr`{cur_price:{price_format}}`")
+        ping(CRYPTO_SIGNALS2,f"Entry price too high, skipping trade. {symbol}{interval} curr`{cur_price:{price_format}}`, {pos_type}")
 except Exception as e:
     strr=traceback.format_exc()
     ping(ERROR_PING2,f"error 108 {symbol}{interval} {ALEXPING} str{str(e)} tb: {strr}")
