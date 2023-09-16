@@ -1,7 +1,7 @@
 import datetime,time,sys
 import traceback
 from aver6_trader import get_current_price,market_trade,price_action_signal, read_signal,log_trade_results
-from aver6_trader import client as cc
+
 from disc_api import ALEXPING, ERROR_PING2, ping,SIGNALROLE,CRYPTO_SIGNALS2,get_random_emoji,CRYPTO_LOGS2
 import time
 symbol=""
