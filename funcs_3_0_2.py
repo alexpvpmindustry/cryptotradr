@@ -72,5 +72,5 @@ def funcc(x):
         training_X.append(ans)
         training_Y.append(result)
         correlation_Y.append( temp_df["Open"].iloc[-1] )
-        t+=25
+        t+=10
     return [training_X,training_Y,correlation_Y]
