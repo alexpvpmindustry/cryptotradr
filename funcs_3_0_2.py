@@ -47,7 +47,7 @@ def funcc(x):
         return (df-w_min)/(w_max-w_min)
     while True:
         try:
-            temp_df_full.iloc[window_size+t+1]
+            temp_df_full.iloc[window_size+t+1] # checks if y (unseen data) is available
         except IndexError :
             break
         temp_df = temp_df_full.iloc[t:window_size+t]
@@ -67,7 +67,7 @@ def funcc(x):
         diff = ((ans[0]-ans[1])/4+0.5,(ans[2]-ans[3])/4+0.5)
         diff2 = ((ans_prev[0]-ans_prev[1])/4+0.5,(ans_prev[2]-ans_prev[3])/4+0.5)
         ans = np.hstack([ans,(ans-ans_prev)/4+0.5,diff,diff2])
-        final_df = temp_df_full.iloc[window_size+t+1]
+        final_df = temp_df_full.iloc[window_size+t+1] #takes the unseen data
         result = (final_df["Close"]-final_df["Open"])/(final_df["Close"])
         training_X.append(ans)
         training_Y.append(result)
