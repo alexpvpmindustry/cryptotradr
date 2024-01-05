@@ -12,6 +12,11 @@ kline_data2/
 kline_data/
 trade_signals/*
 
+leann/data
+leann/lean.json
+leann/Clone*
+leann/wwww
+
 # plotting data
 5_9_2_data/
 5_9_3_data/
