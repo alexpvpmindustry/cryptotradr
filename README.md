@@ -23,6 +23,11 @@ conda activate cryt310
 pip install -q numpy requests schedule pandas mplfinance notebook
 pip install python-binance
 conda install -y -c conda-forge ta-lib
+```
+
+#### test these
+
+```bash
 python testimports.py
 ```
 
