@@ -31,7 +31,6 @@ conda install -y -c conda-forge ta-lib
 python testimports.py
 python test_trades.py
 ```
-
 ## todos
 
 
