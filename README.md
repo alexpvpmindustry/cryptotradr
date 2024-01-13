@@ -1,6 +1,11 @@
 # CryptoTrader
 speaks for itself
 
+
+## current analysis
+
+[here](2_3_0_try_dd.ipynb)
+
 ## installation
 
 conda install with `conda create --name cryt310 --file requirements2.txt`
