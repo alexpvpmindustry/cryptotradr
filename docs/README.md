@@ -6,4 +6,4 @@ speaks for itself
 
 ## current analysis
 
-[here](../html_results/2_3_0_try_dd.html)
+[here](html_results/2_3_0_try_dd.html)
