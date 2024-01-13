@@ -4,7 +4,7 @@ speaks for itself
 
 ## current analysis
 
-[here](2_3_0_try_dd.ipynb)
+[here](html_results/2_3_0_try_dd.html)
 
 ## installation
 
