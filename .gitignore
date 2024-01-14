@@ -16,9 +16,7 @@ leann/data
 leann/lean.json
 leann/Clone*
 leann/wwww
-<<<<<<< HEAD
 leann*
-=======
 leann/.QuantConnect
 
 leannn/data
@@ -26,7 +24,6 @@ leannn/lean.json
 leannn/Clone*
 leannn/wwww
 leannn/.QuantConnect
->>>>>>> 9bfa49ea6b82990e95104eeb4aaee85c898c9bac
 
 # plotting data
 5_9_2_data/
