@@ -33,7 +33,7 @@ conda install -y -c conda-forge ta-lib
 #### test these
 
 ```bash
-python testimports.py
+python test_imports.py
 python test_trades.py
 ```
 ## todos
