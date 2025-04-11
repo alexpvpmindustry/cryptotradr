@@ -17,7 +17,9 @@ data files must be present, `acm matches` and `acm_usdt_15m.csv`
 
 # TODO:
 
-what is the pattern in the images?
+what are the patterns in the images?
+
+rename the locations of the generated figures to be under `docs/`
 
 [here](html_results/2_3_0_try_dd.html)
 
