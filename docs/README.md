@@ -11,7 +11,7 @@ speaks for itself
 
 looking at 3_1_3_full.ipynb
 
-see [acm token analysis in html](../3_1_3_acm_gallery.html)
+see [acm token analysis in html](3_1_3_acm_gallery.html)
 
 ### multi-indicator analysis:
 
