@@ -6,6 +6,8 @@ speaks for itself
 
 looking at 3_1_3_full.ipynb
 
+see [analysis in html](3_1_3_acm_gallery.html)
+
 run this by `conda activate cryt310`
 after installation (from below)
 then `python test_imports.py`
