@@ -4,6 +4,18 @@ speaks for itself
 
 ## current analysis
 
+looking at 3_1_3_full.ipynb
+
+run this by `conda activate cryt310`
+after installation (from below)
+then `python test_imports.py`
+and then `jupyter notebook`
+data files must be present, `acm matches` and `acm_usdt_15m.csv`
+
+# TODO:
+
+what is the pattern in the images?
+
 [here](html_results/2_3_0_try_dd.html)
 
 ## installation
