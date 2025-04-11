@@ -1,6 +1,7 @@
 # CryptoTrader
 speaks for itself
 
+[analysis figures](https://alexpvpmindustry.github.io/cryptotradr/)
 
 ## current analysis
 
